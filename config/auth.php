@@ -40,6 +40,22 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        'api' => [
+            'driver' => 'token',
+            'provider' => 'users',
+            'hash' => false,
+        ],
+        
+        'app' => [
+            'driver' => 'session',
+            'provider' => 'app',
+        ],
+
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'admins', // Aqui você aponta para o provider de administração
+        ],
     ],
 
     /*
@@ -65,10 +81,10 @@ return [
             'model' => App\Models\User::class,
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'admins' => [ // Nome do provider para administração
+            'driver' => 'eloquent',
+            'model' => App\Models\User::class, // Ajuste o modelo para o seu modelo de administração
+        ],
     ],
 
     /*

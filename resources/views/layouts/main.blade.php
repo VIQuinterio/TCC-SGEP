@@ -37,21 +37,17 @@
   class="pt-24 md:mt-0 md:h-screen flex flex-col justify-center text-center md:text-left md:flex-row md:justify-between md:items-center lg:px-48 md:px-12 px-4 bg-secondary">
     <div class="md:flex-1 md:mr-10">
       <h1 class="font-pt-serif text-5xl font-bold mb-7">
-        @yield('title-banner')
-        <span class="bg-underline1 bg-left-bottom bg-no-repeat pb-2 bg-100%">
-          cool website
-        </span>
+        @yield('title-banner')        
       </h1>
       <p class="font-pt-serif font-normal mb-7">
         @yield('subtitle-banner')
       </p>
       <div class="font-montserrat">
-        <button class="bg-black px-6 py-4 rounded-lg border-2 border-black border-solid text-white mr-2 mb-2">
-          @yield('botao-banner')
-        </button>
-        <button class="px-6 py-4 border-2 border-black border-solid rounded-lg">
-          Secondary action
-        </button>
+        <!--<a href="{{ url('signup') }}">-->
+          <button class="bg-black px-6 py-4 rounded-lg border-2 border-black border-solid text-white mr-2 mb-2">
+            @yield('botao-banner')
+          </button>     
+        <!--</a>-->
       </div>
     </div>
     <div class="flex justify-around md:block mt-8 md:mt-0 md:flex-1">  
@@ -59,7 +55,7 @@
     </div>
   </section>
   
-  <section class="text-black sectionSize">
+  <section id="funcionalidades" class="text-black sectionSize">
     <div>
       <h2 class="secondaryTitle bg-underline2 bg-100%">Funcionalidades da Plataforma</h2>
     </div>
@@ -76,9 +72,7 @@
         </li>
         <li class="ms-6">
             <span class="absolute flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full -start-3 ring-8 ring-white dark:ring-gray-900 dark:bg-blue-900">
-                <svg class="w-2.5 h-2.5 text-blue-800 dark:text-blue-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
-                </svg>
+                2
             </span>
             <h3 class="mb-1 text-lg font-semibold text-gray-900 dark:text-white">Flowbite Library v1.2.2</h3>
             <time class="block mb-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">Released on December 2nd, 2021</time>
@@ -89,7 +83,7 @@
   </section>
 
 
-  <section class="bg-black text-white sectionSize">
+  <section id="divulgação" class="bg-black text-white sectionSize">
     <div>
       <h2 class="secondaryTitle bg-underline2 bg-100%">Divulgação de Modalidades Esportivas Públicas Municipais</h2>
     </div>
@@ -127,7 +121,7 @@
     </div>
   </section>
 
-  <section class="sectionSize bg-secondary">
+  <section id="benefícios" class="sectionSize bg-secondary">
     <div>
       <h2 class="secondaryTitle bg-underline3 bg-100%">Benefícios para os Usuários</h2>
     </div>
@@ -165,7 +159,27 @@
     </div>
   </section>
 
-
-
+  <footer>
+    <section class="bg-black sectionSize">
+      <div class="mb-4">
+       <h1 class="h-4 text-white">SGEP</h1>
+      </div>
+      <div class="flex mb-8">
+        <a href="#">
+          <iconify-icon icon="bxl:facebook-square" style="color: white;" alt="Facebook logo" width="25" height="25" class="mx-4"></iconify-icon>
+        </a>
+        <a href="#">
+          <iconify-icon icon="mdi:instagram" style="color: white;" alt="Instagram logo" width="25" height="25" class="mx-4"></iconify-icon>
+        </a>
+        <a href="#">
+          <iconify-icon icon="simple-icons:x" style="color: white;" alt="X logo" width="25" height="25" class="mx-4"></iconify-icon>
+        </a>
+      </div>
+      <div class="text-white font-montserrat text-sm">
+        © 2023 SGEP. Direitos reservados 
+      </div>
+    </section>
+  </footer>
+  <script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js"></script>
 </body>
 </html>
