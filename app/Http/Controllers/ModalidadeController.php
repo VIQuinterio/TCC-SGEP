@@ -73,9 +73,26 @@ class ModalidadeController extends Controller
                 $query->where('nm_modalidade', 'like', "%$key%")
                     ->orWhere('ds_modalidade', 'like', "%$key%");
             })
-            ->get();
+            ->paginate(10); 
 
         return $mod;
+    }
+
+    public function buscar(Request $request)
+    {
+        $key = $request->input('nome'); 
+        $idUsuario = Auth::id();
+
+        $user_modalidade = User::findOrFail($idUsuario)->id;
+
+        $resultados_busca = $this->buscarModalidade($key, $user_modalidade);
+
+        $user_data = $this->procurar_user_por_id($user_modalidade);
+        $mod_data = $this->procurar_mod_por_id($user_modalidade);
+        $list_mods = $this->listarModalidadeUsuario($user_modalidade);
+
+        // Retorne a view dashboard com os resultados da busca
+        return view('app.modalidade.modalidades', compact('resultados_busca', 'user_data', 'mod_data', 'list_mods'));
     }
 
     public function cadastro(Request $request)

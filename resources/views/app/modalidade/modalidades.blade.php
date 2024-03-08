@@ -62,7 +62,7 @@
     </div>
     <div class="flex-1 ml-50 p-8">
         <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-            <form action="{{ route('admin.buscar') }}" method="get" class="flex items-center">
+            <form action="{{ route('app.modalidade.buscar') }}" method="get" class="flex items-center">
                 <label for="voice-search" class="sr-only">Buscar</label>
                 <div class="relative w-full">
                     <input type="text" name="nome" id="voice-search" style="width: 220px;" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Procurar esporte ou descrição" required>
@@ -120,17 +120,17 @@
                                 <td class="px-6 py-4">
                                     <!-- Modal Editar -->
                                     <div class="flex items-center">
-                                        <form action="{{ route('app.modalidade.editar', ['id' => $mod->id]) }}" method="POST">
+                                        <form action="{{ route('app.modalidade.editar', ['id' => $mod->id_modalidade]) }}" method="POST">
                                             @csrf
-                                            <input type="hidden" name="mod_id" value="{{ $mod->id }}">
+                                            <input type="hidden" name="mod_id" value="{{ $mod->id_modalidade }}">
 
                                             <button type="submit"
                                                 class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                                                 type="button"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#2563EB" d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83l3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg></button>
                                         </form>
-                                        <form action="{{ route('app.modalidade.excluir', ['id' => $mod->id]) }}" method="POST">
+                                        <form action="{{ route('app.modalidade.excluir', ['id' => $mod->id_modalidade]) }}" method="POST">
                                             @csrf
-                                            <input type="hidden" name="mod_id" value="{{ $mod->id }}">
+                                            <input type="hidden" name="mod_id" value="{{ $mod->id_modalidade }}">
 
                                             <button type="submit"
                                                 class="font-medium text-red-600 dark:text-red-500 hover:underline"
