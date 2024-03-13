@@ -54,17 +54,57 @@ Route::group(['prefix' => 'app', 'as' => 'app.'], function () {
     Route::get('logout', [AppController::class, 'logout'])->name('logout');
 
     Route::group(['prefix' => 'modalidade', 'as' => 'modalidade.'], function () {
-        Route::get('/', [ModalidadeController::class, 'index'])->name('index'); // Ajuste o nome da rota para 'index'
+        Route::get('/', [ModalidadeController::class, 'index'])->name('index'); 
 
         //Route::get('cadastrar', [ModalidadeController::class, 'mostrarFormularioCadastro'])->name('cadastrar');
         Route::post('cadastro', [ModalidadeController::class,'cadastro'])->name('cadastro');
     
-        Route::get('editar/{id}', [ModalidadeController::class, 'mostrarFormularioEdicao'])->name('editar');
-        Route::post('atualizar/{id}', [ModalidadeController::class, 'atualizar'])->name('atualizar');
+        Route::post('editar', [ModalidadeController::class, 'editar'])->name('editar');
+
+        Route::post('atualizar', [ModalidadeController::class, 'atualizar'])->name('atualizar');
         
         Route::post('excluir/{id}', [ModalidadeController::class, 'excluir'])->name('excluir');
     
         Route::get('buscar', [ModalidadeController::class, 'buscar'])->name('buscar');
+    });
+
+    Route::group(['prefix' => 'noticia', 'as' => 'noticia.'], function () {
+        Route::get('/', [NoticiaController::class, 'index'])->name('index'); 
+
+        Route::post('cadastro', [NoticiaController::class,'cadastro'])->name('cadastro');
+    
+        Route::post('editar/{id}', [NoticiaController::class, 'mostrarFormularioEdicao'])->name('editar');
+        Route::post('atualizar/{id}', [NoticiaController::class, 'atualizar'])->name('atualizar');
+        
+        Route::post('excluir/{id}', [NoticiaController::class, 'excluir'])->name('excluir');
+    
+        Route::get('buscar', [NoticiaController::class, 'buscar'])->name('buscar');
+    });
+
+    Route::group(['prefix' => 'evento', 'as' => 'evento.'], function () {
+        Route::get('/', [EventoController::class, 'index'])->name('index'); 
+
+        Route::post('cadastro', [EventoController::class,'cadastro'])->name('cadastro');
+    
+        Route::post('editar/{id}', [EventoController::class, 'mostrarFormularioEdicao'])->name('editar');
+        Route::post('atualizar/{id}', [EventoController::class, 'atualizar'])->name('atualizar');
+        
+        Route::post('excluir/{id}', [EventoController::class, 'excluir'])->name('excluir');
+    
+        Route::get('buscar', [EventoController::class, 'buscar'])->name('buscar');
+    });
+
+    Route::group(['prefix' => 'unidade', 'as' => 'unidade.'], function () {
+        Route::get('/', [UnidadeController::class, 'index'])->name('index'); 
+        
+        Route::post('cadastro', [UnidadeController::class,'cadastro'])->name('cadastro');
+    
+        Route::post('editar/{id}', [UnidadeController::class, 'mostrarFormularioEdicao'])->name('editar');
+        Route::post('atualizar/{id}', [UnidadeController::class, 'atualizar'])->name('atualizar');
+        
+        Route::post('excluir/{id}', [UnidadeController::class, 'excluir'])->name('excluir');
+    
+        Route::get('buscar', [UnidadeController::class, 'buscar'])->name('buscar');
     });
 
 });

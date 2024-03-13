@@ -9,6 +9,7 @@ class Modalidade extends Model
 {
     use HasFactory;
     protected $table = 'modalidade';
+    protected $primaryKey = 'id_modalidade';
 
     protected $fillable = [
         'nm_modalidade',

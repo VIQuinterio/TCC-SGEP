@@ -47,12 +47,6 @@ class ModalidadeController extends Controller
         }
     }
 
-    public function listarModalidade($id)
-    {
-        $mod = DB::table('modalidade')->where('id_modalidade', $id)->get();
-        return $mod;
-    }
-
     public function listarModalidadeUsuario($id)
     {
         //$mod = DB::table('modalidade')->where('id_usuario', $id)->get();
@@ -72,15 +66,15 @@ class ModalidadeController extends Controller
             ->where(function ($query) use ($key) {
                 $query->where('nm_modalidade', 'like', "%$key%")
                     ->orWhere('ds_modalidade', 'like', "%$key%");
-            })
+            })            
             ->paginate(10); 
 
         return $mod;
     }
-
+    
     public function buscar(Request $request)
     {
-        $key = $request->input('nome'); 
+        $key = $request->input('buscar'); 
         $idUsuario = Auth::id();
 
         $user_modalidade = User::findOrFail($idUsuario)->id;
@@ -124,42 +118,43 @@ class ModalidadeController extends Controller
         return redirect()->back()->with('success', 'Modalidade cadastrada com sucesso.');
     }
 
-    public function atualizar(Request $request, $id)
+    public function atualizar(Request $request)
     {
-        // Obtenha o ID do usuário autenticado
-        $idUsuario = Auth::id();
+         // Obtenha o ID do usuário autenticado
+         $idUsuario = Auth::id();
 
-        $validatedData = $request->validate([
-            'nome' => 'required',
-            'descricao' => 'required',
-        ]);
+         $validatedData = $request->validate([
+             'nome' => 'required',
+             'endereco' => 'required',
+         ]);
 
-        $check_name = DB::table('modalidade')
-            ->where('nm_modalidade', $validatedData['nome'])
-            ->where('id_modalidade', '!=', $id)
-            ->where('id_usuario', $idUsuario)
-            ->count();
-
-        if ($check_name > 0) {
-            return ['errorMessage' => 'Este nome já está registrado. Tente outro.'];
-        }
-
-        $updated = DB::table('modalidade')
-            ->where('id_modalidade', $id)
-            ->where('id_usuario', $idUsuario)
-            ->update([
-                'nm_modalidade' => $validatedData['nome'],
-                'ds_modalidade' => $validatedData['descricao']
-            ]);
-
-        if ($updated) {
-            return redirect()->route("app.modalidade");
-            //return ['successMessage' => 'Informações da Modalidade atualizadas com sucesso'];
-        } else {
-            return ['errorMessage' => 'Modalidade não encontrada'];
-        }
+         $check_name = DB::table('modalidade')
+             ->where('nm_modalidade', $validatedData['nome'])
+             ->where('id_modalidade', $request->input('id'))
+             ->where('id_usuario', $idUsuario)
+             ->count();
+ 
+         if ($check_name > 0) {
+             return ['errorMessage' => 'Este nome já está registrado. Tente outro.'];
+         }
+ 
+         $updated = DB::table('modalidade')
+             ->where('id_modalidade', $request->input('id'))
+             ->where('id_usuario', $idUsuario)
+             ->update([
+                 'nm_modalidade' => $validatedData['nome'],
+                 'ds_modalidade' => $validatedData['endereco']
+             ]);
+ 
+         if ($updated) {
+             return redirect()->route("app.modalidade.index");
+             //return ['successMessage' => 'Informações da Modalidade atualizadas com sucesso'];
+         } else {
+             return ['errorMessage' => 'Modalidade não encontrada'];
+         }
+        
     }
-
+    
     public function excluir($id)
     {
         $deleted = DB::table('modalidade')->where('id_modalidade', $id)->delete();
@@ -177,9 +172,10 @@ class ModalidadeController extends Controller
         return $mod ? $mod : false;
     }
 
-    private function mod_existe($id)
+    public function editar(Request $request)
     {
-        $get_mods = DB::table('modalidade')->where('id_modalidade', $id)->count();
-        return $get_mods > 0 ? true : false;
-    }
+        $id = $request->input('mod_id');
+        $mod = Modalidade::findOrFail($id);
+        return view('app.modalidade.editar', compact('mod'));
+    }    
 }
