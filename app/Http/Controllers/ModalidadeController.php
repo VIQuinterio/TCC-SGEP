@@ -6,7 +6,6 @@ use App\Models\User;
 use App\Models\Modalidade;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Traits\AuthTrait;
 
@@ -120,38 +119,41 @@ class ModalidadeController extends Controller
 
     public function atualizar(Request $request)
     {
-         // Obtenha o ID do usuário autenticado
-         $idUsuario = Auth::id();
+        // Obtenha o ID do usuário autenticado
+        $idUsuario = Auth::id();
 
-         $validatedData = $request->validate([
-             'nome' => 'required',
-             'endereco' => 'required',
-         ]);
+        $validatedData = $request->validate([
+            'nome' => 'required',
+            'descricao' => 'required',
+        ]);
 
-         $check_name = DB::table('modalidade')
-             ->where('nm_modalidade', $validatedData['nome'])
-             ->where('id_modalidade', $request->input('id'))
-             ->where('id_usuario', $idUsuario)
-             ->count();
+        //Verficar depois se é realmente necessário, pois se vc deseja editar só o segundo campo ele não atualiza pois o a condição barra a ação
+        $check_name = DB::table('modalidade')
+            ->where('nm_modalidade', $validatedData['nome'])
+            ->where('id_modalidade', $request->input('id'))
+            ->where('id_usuario', $idUsuario)
+            ->count();
  
-         if ($check_name > 0) {
-             return ['errorMessage' => 'Este nome já está registrado. Tente outro.'];
-         }
+        
+        if ($check_name > 0) {
+            return ['errorMessage' => 'Este nome já está registrado. Tente outro.'];
+        }
+        //fim do comentário acima
+        
+        $updated = DB::table('modalidade')
+            ->where('id_modalidade', $request->input('id'))
+            ->where('id_usuario', $idUsuario)
+            ->update([
+                'nm_modalidade' => $validatedData['nome'],
+                'ds_modalidade' => $validatedData['descricao']
+            ]);
  
-         $updated = DB::table('modalidade')
-             ->where('id_modalidade', $request->input('id'))
-             ->where('id_usuario', $idUsuario)
-             ->update([
-                 'nm_modalidade' => $validatedData['nome'],
-                 'ds_modalidade' => $validatedData['endereco']
-             ]);
- 
-         if ($updated) {
-             return redirect()->route("app.modalidade.index");
-             //return ['successMessage' => 'Informações da Modalidade atualizadas com sucesso'];
-         } else {
-             return ['errorMessage' => 'Modalidade não encontrada'];
-         }
+        if ($updated) {
+            return redirect()->route("app.modalidade.index");
+            //return ['successMessage' => 'Informações da Modalidade atualizadas com sucesso'];
+        } else {
+            return ['errorMessage' => 'Modalidade não encontrada'];
+        }
         
     }
     

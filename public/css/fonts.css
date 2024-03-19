@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
+
+
+.ql-font-roboto-mono {
+    font-family: "Roboto Mono", monospace;
+}
+
+.ql-font-times {
+    font-family: "Times", "Times New Roman", serif;
+}
+
+.ql-font-helvetica{
+    font-family: Helvetica, sans-serif;
+}
+
+.ql-font-arial{
+    font-family: Arial, sans-serif;
+}
+
+.ql-font-verdana{
+    font-family: Verdana, sans-serif;
+}
+
+.ql-font-impact{
+    font-family: Impact, sans-serif;
+}
