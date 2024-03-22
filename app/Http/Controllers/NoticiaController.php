@@ -154,26 +154,32 @@ class NoticiaController extends Controller
 
         // Verifica se já existe outro noticia com o mesmo nome, excluindo o noticia que está sendo atualizado
         $check_name = DB::table('noticia')
-            ->where('nm_titulo', $validatedData['nome'])
+            ->where('nm_titulo', $validatedData['titulo'])
             ->where('id_usuario', $idUsuario)
             ->where('id_noticia', '<>', $request->input('id')) // Exclui o noticia que está sendo atualizado
             ->count();
 
         if ($check_name > 0) {
-            return ['errorMessage' => 'Este nome já está registrado. Tente outro.'];
+            return ['errorMessage' => 'Este titulo já está registrado. Tente outro.'];
         }
+        
+        // Processar o upload da imagem
+        if ($request->hasFile('imagem')) {
+            // Armazenar a imagem
+            $imagemPath = $request->file('imagem')->store('imagens', 'public');
 
-        // Atualiza o noticia com os novos dados
-        $updated = DB::table('noticia')
+            // Atualiza o noticia com os novos dados
+            $updated = DB::table('noticia')
             ->where('id_noticia', $request->input('id'))
             ->where('id_usuario', $idUsuario)
             ->update([
-                'nm_titulo' => $validatedData['nome'],
+                'nm_titulo' => $validatedData['titulo'],
                 'ds_conteudo' => $validatedData['conteudo'],
-                'im_capa' => $validatedData['imagem'],
-                'dt_noticia' => $validatedData['data'],            
-            ]);
-
+                'im_capa' => $imagemPath, // Armazene o caminho da imagem no banco de dados
+                'dt_noticia' => $validatedData['data'],           
+            ]);            
+        }
+       
         if ($updated) {
             return redirect()->route("app.noticia.index");
             //return ['successMessage' => 'Informações do noticia atualizadas com sucesso'];

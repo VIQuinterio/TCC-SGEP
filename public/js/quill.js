@@ -4,40 +4,11 @@ FontAttributor.whitelist = [
   'helvetica', 'arial', 'verdana', 'impact'
 ];
 Quill.register(FontAttributor, true);
-/*
-var quill = new Quill('#editor-container', {  
-  modules: {
-    toolbar: '#toolbar'
-  },
-  placeholder: 'Escrever o conteúdo da notícia...',
-  theme: 'snow'
-});
 
-quill.on('text-change', function(delta, oldDelta, source) {
-  document.getElementById("editor-container").value = quill.root.innerHTML;
-});
-
-var quill_ed = new Quill('#editor', {  
-  modules: {
-    toolbar: '#toolbar-edit'
-  },
-  placeholder: 'Escrever o conteúdo da notícia...',
-  theme: 'snow'
-});
-
-// Adiciona um ouvinte de evento para o envio do formulário
-document.addEventListener('DOMContentLoaded', function() {
-  const form = document.querySelector('#form_edicao');
-  form.addEventListener('submit', function(event) {
-      // Atualiza o valor do campo de conteúdo com o HTML do editor Quill
-      document.querySelector('#conteudo').value = quill.root.innerHTML;
-  });
-});
-*/
 // Initialize Quill
-var quill = new Quill('#editor-container', {
+var quill = new Quill('#editor-cadastro', {
   modules: {
-    toolbar: '#toolbar'    
+    toolbar: '#toolbar-cadastro'    
   },
   placeholder: 'Escrever o conteúdo da notícia...',
   theme: 'snow'
@@ -47,24 +18,7 @@ var quill = new Quill('#editor-container', {
 $("form").on("submit", function() {
   $(".ql-clipboard").remove(); // because automatically generated
   $(".ql-tooltip").remove(); // because automatically generated
-  $("#hiddenTextarea").val($("#editor-container").html());
-});
-
-// Transferir conteúdo do Quill para o campo de texto oculto ao enviar o formulário
-$("form").on("submit", function() {
-  var quillContent = quill.getText(); // Obter o conteúdo de texto do Quill
-  $(".ql-clipboard").remove(); // because automatically generated
-  $(".ql-tooltip").remove(); // because automatically generated
-  $("#hiddenTextarea").val(quillContent); // Definir o valor do campo de texto oculto
-});
-
-// Inicializar o editor Quill
-var quill = new Quill('#editor', {
-  modules: {
-    toolbar: '#toolbar-edit'    
-  },
-  placeholder: 'Escrever o conteúdo da notícia...',
-  theme: 'snow'
+  $("#hiddenTextarea-cadastro").val($("#editor-cadastro").html());
 });
 
 const updateScroll = quill.scroll.update.bind(quill.scroll);

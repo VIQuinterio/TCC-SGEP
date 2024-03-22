@@ -1,5 +1,5 @@
 <div id="edit-modal{{$news->id_noticia}}" data-modal-backdrop="static" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-    <div class="relative p-4 w-full max-w-xl max-h-full">
+    <div class="relative p-4 w-full max-w-xl max-h-full" style="max-width: 38rem;">
         <!-- Modal content -->
         <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
             <!-- Modal header -->
@@ -22,7 +22,7 @@
                         <div class="col-span-2 sm:col-span-1">                            
                             <input type="hidden" name="id" value="{{$news->id_noticia}}">
                             <label for="titulo" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Título</label>
-                            <input type="text" name="nome" id="nome" value="{{$news->nm_titulo}}"
+                            <input type="text" name="titulo" id="titulo" value="{{$news->nm_titulo}}"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                             required>
                         </div>
@@ -42,7 +42,7 @@
                             <p class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="img">Formatos suportados: SVG, PNG, JPG ou JPEG</p>
                         </div>
                         <div class="col-span-2" style="margin-bottom: auto;">               
-                            <div id="toolbar-edit" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 
+                            <div id="toolbar-edicao-{{$news->id_noticia}}" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 
                                 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" style="border-bottom-right-radius: 0; border-bottom-left-radius: 0;">
                                 <span class="ql-formats">
                                     <select class="ql-font">
@@ -101,10 +101,10 @@
                                     <button class="ql-video"></button>
                                 </span>
                             </div>                         
-                            <div id="editor-container" class="block w-full px-0 text-sm text-gray-800 px-4 py-2 bg-white rounded-b-lg 
+                            <div id="editor-edicao-{{$news->id_noticia}}" class="block w-full px-0 text-sm text-gray-800 px-4 py-2 bg-white rounded-b-lg 
                             border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400"></div>
 
-                            <textarea th:field="*{content}" class="form-control" name="conteudo" style="display:none" id="hiddenTextarea1" value="{{$news->ds_conteudo}}"></textarea>                                                                      
+                            <textarea th:field="*{content}" class="form-control" name="conteudo" style="display:none" id="hiddenTextarea-edicao-{{$news->id_noticia}}"></textarea>                                                                      
                         </div>
                         <!-- Rodapé do Modal -->
                         <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
@@ -129,4 +129,12 @@
             event.stopPropagation(); // Impede a propagação do evento de fechamento do modal
         }
     });
+    @foreach ($list_news as $news)
+            // Transferir conteúdo do Quill para textarea quando o formulário for enviado
+            $("form").on("submit", function() {
+                $(".ql-clipboard").remove(); // Remove porque é gerado automaticamente
+                $(".ql-tooltip").remove(); // Remove porque é gerado automaticamente
+                $("#hiddenTextarea-edicao-{{ $news->id_noticia }}").val($("#editor-edicao-{{ $news->id_noticia }}").html());
+            });
+        @endforeach
 </script>
