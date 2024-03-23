@@ -102,7 +102,7 @@
                                 </span>
                             </div>                         
                             <div id="editor-edicao-{{$news->id_noticia}}" class="block w-full px-0 text-sm text-gray-800 px-4 py-2 bg-white rounded-b-lg 
-                            border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400"></div>
+                            border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400">{!! $news->ds_conteudo !!}</div>
 
                             <textarea th:field="*{content}" class="form-control" name="conteudo" style="display:none" id="hiddenTextarea-edicao-{{$news->id_noticia}}"></textarea>                                                                      
                         </div>
@@ -130,11 +130,11 @@
         }
     });
     @foreach ($list_news as $news)
-            // Transferir conteúdo do Quill para textarea quando o formulário for enviado
-            $("form").on("submit", function() {
-                $(".ql-clipboard").remove(); // Remove porque é gerado automaticamente
-                $(".ql-tooltip").remove(); // Remove porque é gerado automaticamente
-                $("#hiddenTextarea-edicao-{{ $news->id_noticia }}").val($("#editor-edicao-{{ $news->id_noticia }}").html());
-            });
-        @endforeach
+        // Transferir conteúdo do Quill para textarea quando o formulário for enviado
+        $("form").on("submit", function() {
+            $(".ql-clipboard").remove(); // Remove porque é gerado automaticamente
+            $(".ql-tooltip").remove(); // Remove porque é gerado automaticamente
+            $("#hiddenTextarea-edicao-{{ $news->id_noticia }}").val($("#editor-edicao-{{ $news->id_noticia }}").html());
+        });
+    @endforeach
 </script>

@@ -23,7 +23,7 @@ use App\Http\Controllers\NoticiaController;
 
 Route::get('/', function () {
     return view('Home');
-});
+})->name('home');
 
 Route::get('/login', function () {
     return view('Login');

@@ -386,9 +386,8 @@
                 },
                 placeholder: 'Escrever o conteúdo da notícia...',
                 theme: 'snow'
-            });           
-        @endforeach
-       
+            });                        
+        @endforeach       
     </script>
     <script src="{{ asset('js/modal.js') }}"></script>
 </body>

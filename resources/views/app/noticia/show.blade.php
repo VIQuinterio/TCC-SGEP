@@ -23,7 +23,7 @@
 
     <link rel="stylesheet" href="{{ asset('css/fonts.css') }}">
     <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
-    <title>Detalhes Notícia</title>
+    <title>{{ $news_data->nm_titulo}}</title>
 </head>
 
 <body bgcolor="#F9F6ED">
@@ -52,5 +52,6 @@
             <div style="pointer-events: none">{!! $news_data->ds_conteudo !!}</div>
         </div>        
     </main>
+    @include('layouts.footer')
 </body>
 </html>
