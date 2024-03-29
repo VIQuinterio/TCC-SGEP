@@ -46,10 +46,14 @@ class ModalidadeController extends Controller
         }
     }
 
+    public function listarModalidades($id){
+        $mod = DB::table('modalidade')->where('id_usuario', $id)->get();
+        return $mod;
+    }
+
+
     public function listarModalidadeUsuario($id)
     {
-        //$mod = DB::table('modalidade')->where('id_usuario', $id)->get();
-        //return $mod;
         $sort = request()->input('sort', 'id_usuario');
         $direction = request()->input('direction', 'asc');
 

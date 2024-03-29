@@ -67,6 +67,16 @@ class EventoController extends Controller
             ->paginate(10);
     }
     
+    public function listarEvento($id)
+    {
+        $evento = DB::table('evento as e')
+            ->join('unidade as u', 'e.id_unidade', '=', 'u.id_unidade')
+            ->select('e.id_evento', 'e.nm_evento', 'e.ds_evento', 'e.dt_evento', 'u.nm_unidade')            
+            ->where('e.id_usuario', $id)
+            ->get();
+            
+        return $evento;
+    }
 
     public function buscarEvento($key, $id)
     {

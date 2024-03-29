@@ -56,6 +56,13 @@ class UnidadeController extends Controller
             ->paginate(10);
     }
 
+    public function listarUnidade($id)
+    {
+        $unidade = Unidade::where('id_usuario', $id)            
+            ->get();
+        return $unidade;
+    }
+
     public function buscarUnidade($key, $id)
     {
         $unid = DB::table('unidade')

@@ -46,7 +46,15 @@ class NoticiaController extends Controller
             return redirect()->route('login')->with('error', 'Você precisa fazer login como usuário para acessar o painel.');
         }
     }
-
+    public function noticiasRecentes($id)
+    {
+        $noticias = Noticia::where('id_usuario', $id)
+                            ->orderBy('dt_noticia', 'DESC')
+                            ->limit(3)
+                            ->get();
+        return $noticias;
+    }
+    
     public function listarNoticiaUsuario($id)
     {
         $sort = request()->input('sort', 'id_usuario'); // Especificando a tabela 'noticia' para ordenação
@@ -151,16 +159,15 @@ class NoticiaController extends Controller
                 },
             ],
         ]);
-
-        // Verifica se já existe outro noticia com o mesmo nome, excluindo o noticia que está sendo atualizado
-        $check_name = DB::table('noticia')
-            ->where('nm_titulo', $validatedData['titulo'])
+        // Verifica se o título está sendo alterado para um valor já existente em outro notícia
+        $existingNews = DB::table('noticia')
             ->where('id_usuario', $idUsuario)
-            ->where('id_noticia', '<>', $request->input('id')) // Exclui o noticia que está sendo atualizado
-            ->count();
+            ->where('nm_titulo', $validatedData['titulo'])
+            ->where('id_noticia', '<>', $request->input('id')) // Exclui o notícia que está sendo atualizado
+            ->first();
 
-        if ($check_name > 0) {
-            return ['errorMessage' => 'Este titulo já está registrado. Tente outro.'];
+        if ($existingNews) {
+            return ['errorMessage' => 'Este título já está sendo usado em outro notícia. Por favor, escolha um título diferente.'];
         }
         
         // Processar o upload da imagem
