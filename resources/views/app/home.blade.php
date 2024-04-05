@@ -17,6 +17,10 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
     <link rel="stylesheet" href="{{ asset('css/fonts.css') }}">
     <title>Home</title>
@@ -26,7 +30,6 @@
     @include('layouts.navbar')
     <div>
         <div id="default-carousel" class="relative w-full" data-carousel="slide">
-            <!-- Carousel wrapper -->
             <div class="relative h-56 overflow-hidden md:h-96">
                 @foreach ($list_news as $index => $news)
                     <div class="hidden duration-700 ease-in-out" data-carousel-item>
@@ -36,7 +39,6 @@
                     </div>
                 @endforeach
             </div>
-            <!-- Slider indicators -->
             <div class="absolute z-30 flex -translate-x-1/2 bottom-5 left-1/2 space-x-3 rtl:space-x-reverse">
                 @foreach ($list_news as $index => $news)
                     <button type="button" class="w-3 h-3 rounded-full {{ $index === 0 ? 'bg-white' : 'bg-gray-300' }}"
@@ -44,7 +46,6 @@
                         data-carousel-slide-to="{{ $index }}"></button>
                 @endforeach
             </div>
-            <!-- Slider controls -->
             <button type="button"
                 class="absolute top-0 start-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
                 data-carousel-prev>
@@ -74,7 +75,7 @@
         </div>
 
 
-        <div class="bg-noticias">
+        <div>
             <div id="modalidades" class="flex-1 ml-64 p-2"
                 style="display: flex; flex-direction: row; margin: 5px; flex-wrap: wrap; justify-content:center;">
                 <h1 class="flex items-center text-5xl font-extrabold dark:text-white m-10">Eventos da região</h1>
@@ -123,35 +124,27 @@
                 @endforeach
             </div>
         </div>
-        <div id="unidades" class="flex-1 ml-64 p-20"
-            style="display: flex; flex-direction: row; margin: 5px; overflow: hidden; justify-content:center">
-            <!-- Cards à Esquerda -->
-            <div class="flex flex-wrap"
-                style="margin-right: 5px; max-height: 400px; overflow-y: auto; flex-direction: row; width: 441px;">
+        <div id="unidades" class="flex-1 ml-64 p-20" style="background: #737373; display: flex; flex-direction: row; margin: 5px; overflow: hidden; justify-content:center">
+            <div class="flex flex-wrap" style="margin-right: 5px; max-height: 400px; overflow-y: auto; flex-direction: row; width: 441px;">
                 @foreach ($list_unid as $unid)
-                    <div
-                        class="relative flex w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md m-5">
+                    <div class="relative flex w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md m-5">
                         <div class="p-6">
-                            <h5
-                                class="mb-2 block font-sans text-xl font-semibold leading-snug tracking-normal text-blue-gray-900 antialiased">
+                            <h5 class="mb-2 block font-sans text-xl font-semibold leading-snug tracking-normal text-blue-gray-900 antialiased">
                                 {{ $unid->nm_unidade }}
                             </h5>
-                            <h6
-                                class="mb-2 block font-sans text-xl font-semibold leading-snug tracking-normal text-blue-gray-900 antialiased">
+                            <h6 class="mb-2 block font-sans  font-semibold leading-snug tracking-normal text-blue-gray-900 antialiased">
                                 {{ $unid->ds_endereco }}
-                            </h6>
+                            </h6>                            
+                            <div class="hidden" data-endereco="{{ $unid->ds_endereco }}" data-municipio="{{ $user_data->nm_usuario }}"></div>
                         </div>
                     </div>
                 @endforeach
             </div>
-            <!-- Mapa à Direita -->
-            <iframe
-                src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d29203.566287414164!2d-46.02668773103145!3d-23.802742068863513!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1spt-BR!2sbr!4v1700014452900!5m2!1spt-BR!2sbr"
-                width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <div id="map" style="width: 600px; height: 400px;"></div>            
         </div>
         @include('layouts.footer')
     </div>
+    <script src="{{ asset('js/map.js') }}"></script>
 </body>
 
 </html>

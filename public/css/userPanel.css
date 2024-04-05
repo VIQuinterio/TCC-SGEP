@@ -36,3 +36,8 @@
 .border-bottom-color{
     border-bottom: #0B3142 2px solid;
 }
+
+.navbar{
+  background: #0070C0;
+  color: #FFFFFF;
+}

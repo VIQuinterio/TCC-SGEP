@@ -16,35 +16,26 @@ class EventoController extends Controller
 
     public function index()
     {
-
-        // Verifique se o usuário está autenticado e é um usuário comum
         if (Auth::check() && Auth::user()->sg_tipo == 'USER') {
-            $user_id = Auth::id(); // Obtenha o ID do usuário autenticado
+            $user_id = Auth::id(); 
 
-            // Obtenha o ID da unidade associada ao usuário autenticado
             $user_evento = User::findOrFail($user_id)->id;
 
-            // Verifique se o usuário tem uma unidade associada
             if ($user_evento) {
-                // Obtenha os dados do usuário autenticado
+
                 $user_data = $this->procurar_user_por_id($user_id);
 
-                // Obtenha os dados da unidade
                 $event_data = $this->procurar_event_por_id($user_evento);
 
-                // Se o usuário tiver uma unidade, obtenha todas as unidades do usuário
                 $list_event = $this->listarEventoUsuario($user_evento);
 
                 $list_unidades = $this->listarUnidadeUsuario($user_id);
 
-                // Renderize a view do dashboard passando os dados necessários
                 return view('app.evento.eventos', compact('user_data', 'event_data', 'list_event', 'list_unidades'));
             } else {
-                // Se o usuário não tiver uma unidade associada, retorne uma mensagem de erro
                 return redirect()->route('login')->with('error', 'Você não tem uma unidade associada.');
             }
         } else {
-            // Se o usuário não estiver autenticado ou não for um usuário comum, redirecione para a página de login
             return redirect()->route('login')->with('error', 'Você precisa fazer login como usuário para acessar o painel.');
         }
     }
@@ -56,7 +47,7 @@ class EventoController extends Controller
 
     public function listarEventoUsuario($id)
     {
-        $sort = request()->input('sort', 'e.id_usuario'); // Especificando a tabela 'evento' para ordenação
+        $sort = request()->input('sort', 'e.id_usuario');
         $direction = request()->input('direction', 'asc');
     
         return DB::table('evento as e')
@@ -105,13 +96,11 @@ class EventoController extends Controller
         $list_event = $this->listarEventoUsuario($user_evento);
         $list_unidades = $this->listarUnidadeUsuario($idUsuario);
 
-        // Retorne a view dashboard com os resultados da busca
         return view('app.evento.eventos', compact('resultados_busca', 'user_data', 'event_data', 'list_event', 'list_unidades'));
     }
 
     public function cadastro(Request $request)
     {
-        // Obtenha o ID do usuário autenticado
         $idUsuario = Auth::id();
 
         $validatedData = $request->validate([
@@ -151,13 +140,11 @@ class EventoController extends Controller
             'id_usuario' => $idUsuario
         ]);
 
-        // Após o cadastro, redirecione de volta para a mesma página
         return redirect()->back()->with('success', 'evento cadastrada com sucesso.');
     }
 
     public function atualizar(Request $request)
     {
-        // Obtenha o ID do usuário autenticado
         $idUsuario = Auth::id();
 
         $validatedData = $request->validate([
@@ -179,18 +166,16 @@ class EventoController extends Controller
             'id_unidade' => 'required',
         ]);
 
-        // Verifica se já existe outro evento com o mesmo nome, excluindo o evento que está sendo atualizado
-        $check_name = DB::table('evento')
-            ->where('nm_evento', $validatedData['nome'])
+        $existingEvent = DB::table('evento')
             ->where('id_usuario', $idUsuario)
-            ->where('id_evento', '<>', $request->input('id')) // Exclui o evento que está sendo atualizado
-            ->count();
+            ->where('nm_evento', $validatedData['nome'])
+            ->where('id_evento', '<>', $request->input('id'))
+            ->first();
 
-        if ($check_name > 0) {
-            return ['errorMessage' => 'Este nome já está registrado. Tente outro.'];
+        if ($existingEvent) {
+            return ['errorMessage' => 'Este título já está sendo usado em outro notícia. Por favor, escolha um título diferente.'];
         }
 
-        // Atualiza o evento com os novos dados
         $updated = DB::table('evento')
             ->where('id_evento', $request->input('id'))
             ->where('id_usuario', $idUsuario)
@@ -203,7 +188,7 @@ class EventoController extends Controller
 
         if ($updated) {
             return redirect()->route("app.evento.index");
-            //return ['successMessage' => 'Informações do evento atualizadas com sucesso'];
+            /*return ['successMessage' => 'Informações do evento atualizadas com sucesso'];*/
         } else {
             return ['errorMessage' => 'Evento não encontrado'];
         }

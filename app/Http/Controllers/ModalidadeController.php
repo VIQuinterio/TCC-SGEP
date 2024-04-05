@@ -14,34 +14,25 @@ class ModalidadeController extends Controller
     use AuthTrait;
 
     public function index()
-    {
-
-        // Verifique se o usuário está autenticado e é um usuário comum
+    {        
         if (Auth::check() && Auth::user()->sg_tipo == 'USER') {
-            $user_id = Auth::id(); // Obtenha o ID do usuário autenticado
-
-            // Obtenha o ID da modalidade associada ao usuário autenticado
+            $user_id = Auth::id(); 
+            
             $user_modalidade = User::findOrFail($user_id)->id;
-
-            // Verifique se o usuário tem uma modalidade associada
+            
             if ($user_modalidade) {
-                // Obtenha os dados do usuário autenticado
+                
                 $user_data = $this->procurar_user_por_id($user_id);
-
-                // Obtenha os dados da modalidade
+                
                 $mod_data = $this->procurar_mod_por_id($user_modalidade);
-
-                // Se o usuário tiver uma modalidade, obtenha todas as modalidades do usuário
+                
                 $list_mods = $this->listarModalidadeUsuario($user_modalidade);
-
-                // Renderize a view do dashboard passando os dados necessários
+                
                 return view('app.modalidade.modalidades', compact('user_data', 'mod_data', 'list_mods'));
-            } else {
-                // Se o usuário não tiver uma modalidade associada, retorne uma mensagem de erro
+            } else {                
                 return redirect()->route('login')->with('error', 'Você não tem uma modalidade associada.');
             }
         } else {
-            // Se o usuário não estiver autenticado ou não for um usuário comum, redirecione para a página de login
             return redirect()->route('login')->with('error', 'Você precisa fazer login como usuário para acessar o painel.');
         }
     }
@@ -50,8 +41,7 @@ class ModalidadeController extends Controller
         $mod = DB::table('modalidade')->where('id_usuario', $id)->get();
         return $mod;
     }
-
-
+    
     public function listarModalidadeUsuario($id)
     {
         $sort = request()->input('sort', 'id_usuario');
@@ -88,13 +78,11 @@ class ModalidadeController extends Controller
         $mod_data = $this->procurar_mod_por_id($user_modalidade);
         $list_mods = $this->listarModalidadeUsuario($user_modalidade);
 
-        // Retorne a view dashboard com os resultados da busca
         return view('app.modalidade.modalidades', compact('resultados_busca', 'user_data', 'mod_data', 'list_mods'));
     }
 
     public function cadastro(Request $request)
     {
-        // Obtenha o ID do usuário autenticado
         $idUsuario = Auth::id();
 
         $validatedData = $request->validate([
@@ -117,13 +105,11 @@ class ModalidadeController extends Controller
             'id_usuario' => $idUsuario
         ]);
 
-        // Após o cadastro, redirecione de volta para a mesma página
         return redirect()->back()->with('success', 'Modalidade cadastrada com sucesso.');
     }
 
     public function atualizar(Request $request)
     {
-        // Obtenha o ID do usuário autenticado
         $idUsuario = Auth::id();
 
         $validatedData = $request->validate([
@@ -131,18 +117,15 @@ class ModalidadeController extends Controller
             'descricao' => 'required',
         ]);
 
-        //Verficar depois se é realmente necessário, pois se vc deseja editar só o segundo campo ele não atualiza pois o a condição barra a ação
-        $check_name = DB::table('modalidade')
-            ->where('nm_modalidade', $validatedData['nome'])
-            ->where('id_modalidade', $request->input('id'))
+        $existingMod = DB::table('modalidade')
             ->where('id_usuario', $idUsuario)
-            ->count();
- 
-        
-        if ($check_name > 0) {
-            return ['errorMessage' => 'Este nome já está registrado. Tente outro.'];
+            ->where('nm_modalidade', $validatedData['nome'])
+            ->where('id_modalidade', '<>', $request->input('id'))
+            ->first();
+    
+        if ($existingMod) {
+            return ['errorMessage' => 'Este título já está sendo usado em outro notícia. Por favor, escolha um título diferente.'];
         }
-        //fim do comentário acima
         
         $updated = DB::table('modalidade')
             ->where('id_modalidade', $request->input('id'))
@@ -154,7 +137,7 @@ class ModalidadeController extends Controller
  
         if ($updated) {
             return redirect()->route("app.modalidade.index");
-            //return ['successMessage' => 'Informações da Modalidade atualizadas com sucesso'];
+            /*return ['successMessage' => 'Informações da Modalidade atualizadas com sucesso'];*/
         } else {
             return ['errorMessage' => 'Modalidade não encontrada'];
         }

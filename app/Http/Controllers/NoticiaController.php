@@ -15,34 +15,25 @@ class NoticiaController extends Controller
     use AuthTrait;
 
     public function index()
-    {
-
-        // Verifique se o usuário está autenticado e é um usuário comum
+    {        
         if (Auth::check() && Auth::user()->sg_tipo == 'USER') {
-            $user_id = Auth::id(); // Obtenha o ID do usuário autenticado
+            $user_id = Auth::id(); 
 
-            // Obtenha o ID da noticia associada ao usuário autenticado
             $user_news = User::findOrFail($user_id)->id;
-
-            // Verifique se o usuário tem uma noticia associada
+            
             if ($user_news) {
-                // Obtenha os dados do usuário autenticado
+                
                 $user_data = $this->procurar_user_por_id($user_id);
-
-                // Obtenha os dados da noticia
+                
                 $news_data = $this->procurar_noticia_por_id($user_news);
-
-                // Se o usuário tiver uma noticia, obtenha todas as noticias do usuário
+                
                 $list_news = $this->listarNoticiaUsuario($user_news);                
-
-                // Renderize a view do dashboard passando os dados necessários
+                
                 return view('app.noticia.noticias', compact('user_data', 'news_data', 'list_news'));
-            } else {
-                // Se o usuário não tiver uma noticia associada, retorne uma mensagem de erro
+            } else {                
                 return redirect()->route('login')->with('error', 'Você não tem uma noticia associada.');
             }
-        } else {
-            // Se o usuário não estiver autenticado ou não for um usuário comum, redirecione para a página de login
+        } else {            
             return redirect()->route('login')->with('error', 'Você precisa fazer login como usuário para acessar o painel.');
         }
     }
@@ -57,7 +48,7 @@ class NoticiaController extends Controller
     
     public function listarNoticiaUsuario($id)
     {
-        $sort = request()->input('sort', 'id_usuario'); // Especificando a tabela 'noticia' para ordenação
+        $sort = request()->input('sort', 'id_usuario');
         $direction = request()->input('direction', 'asc');
     
         return Noticia::where('id_usuario', $id)
@@ -91,7 +82,6 @@ class NoticiaController extends Controller
         $news_data = $this->procurar_noticia_por_id($user_news);
         $list_news = $this->listarNoticiaUsuario($user_news);
 
-        // Retorne a view dashboard com os resultados da busca
         return view('app.noticia.noticias', compact('resultados_busca', 'user_data', 'news_data', 'list_news'));
     }
 
@@ -117,34 +107,31 @@ class NoticiaController extends Controller
                 },
             ],
         ]);
-        // Processar o upload da imagem
+
         if ($request->hasFile('imagem')) {
-            // Armazenar a imagem
+
             $imagemPath = $request->file('imagem')->store('imagens', 'public');
 
-            // Inserir os dados da notícia no banco de dados, incluindo o caminho da imagem
             DB::table('noticia')->insert([
                 'nm_titulo' => $validatedData['titulo'],
                 'ds_conteudo' => $validatedData['conteudo'],
-                'im_capa' => $imagemPath, // Armazene o caminho da imagem no banco de dados
+                'im_capa' => $imagemPath, 
                 'dt_noticia' => $validatedData['data'],
                 'id_usuario' => $idUsuario
             ]);
-            // Após o cadastro, redirecione de volta para a mesma página
+
             return redirect()->back()->with('success', 'noticia cadastrada com sucesso.');
         }
-   
     }
 
     public function atualizar(Request $request)
     {
-        // Obtenha o ID do usuário autenticado
         $idUsuario = Auth::id();
 
         $validatedData = $request->validate([
             'titulo' => 'required',
             'conteudo' => 'required',
-            'imagem' => 'required|image|mimes:jpeg,png,jpg,svg|max:2048', // Defina as regras de validação para a imagem
+            'imagem' => 'required|image|mimes:jpeg,png,jpg,svg|max:2048',
             'data' => [
                 'required',
                 'date_format:Y-m-d',
@@ -159,37 +146,35 @@ class NoticiaController extends Controller
                 },
             ],
         ]);
-        // Verifica se o título está sendo alterado para um valor já existente em outro notícia
+        
         $existingNews = DB::table('noticia')
             ->where('id_usuario', $idUsuario)
             ->where('nm_titulo', $validatedData['titulo'])
-            ->where('id_noticia', '<>', $request->input('id')) // Exclui o notícia que está sendo atualizado
+            ->where('id_noticia', '<>', $request->input('id')) 
             ->first();
 
         if ($existingNews) {
             return ['errorMessage' => 'Este título já está sendo usado em outro notícia. Por favor, escolha um título diferente.'];
         }
         
-        // Processar o upload da imagem
         if ($request->hasFile('imagem')) {
-            // Armazenar a imagem
+
             $imagemPath = $request->file('imagem')->store('imagens', 'public');
 
-            // Atualiza o noticia com os novos dados
             $updated = DB::table('noticia')
             ->where('id_noticia', $request->input('id'))
             ->where('id_usuario', $idUsuario)
             ->update([
                 'nm_titulo' => $validatedData['titulo'],
                 'ds_conteudo' => $validatedData['conteudo'],
-                'im_capa' => $imagemPath, // Armazene o caminho da imagem no banco de dados
+                'im_capa' => $imagemPath,
                 'dt_noticia' => $validatedData['data'],           
             ]);            
         }
        
         if ($updated) {
             return redirect()->route("app.noticia.index");
-            //return ['successMessage' => 'Informações do noticia atualizadas com sucesso'];
+            /*return ['successMessage' => 'Informações do noticia atualizadas com sucesso'];*/
         } else {
             return ['errorMessage' => 'noticia não encontrado'];
         }

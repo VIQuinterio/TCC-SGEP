@@ -14,34 +14,25 @@ class UnidadeController extends Controller
     use AuthTrait;
 
     public function index()
-    {
-
-        // Verifique se o usuário está autenticado e é um usuário comum
+    {        
         if (Auth::check() && Auth::user()->sg_tipo == 'USER') {
-            $user_id = Auth::id(); // Obtenha o ID do usuário autenticado
-
-            // Obtenha o ID da unidade associada ao usuário autenticado
+            $user_id = Auth::id(); 
+            
             $user_unidade = User::findOrFail($user_id)->id;
-
-            // Verifique se o usuário tem uma unidade associada
+            
             if ($user_unidade) {
-                // Obtenha os dados do usuário autenticado
+            
                 $user_data = $this->procurar_user_por_id($user_id);
-
-                // Obtenha os dados da unidade
+                
                 $unid_data = $this->procurar_unid_por_id($user_unidade);
-
-                // Se o usuário tiver uma unidade, obtenha todas as unidades do usuário
+            
                 $list_unid = $this->listarUnidadeUsuario($user_unidade);
-
-                // Renderize a view do dashboard passando os dados necessários
+                
                 return view('app.unidade.unidades', compact('user_data', 'unid_data', 'list_unid'));
-            } else {
-                // Se o usuário não tiver uma unidade associada, retorne uma mensagem de erro
+            } else {                
                 return redirect()->route('login')->with('error', 'Você não tem uma unidade associada.');
             }
-        } else {
-            // Se o usuário não estiver autenticado ou não for um usuário comum, redirecione para a página de login
+        } else {            
             return redirect()->route('login')->with('error', 'Você precisa fazer login como usuário para acessar o painel.');
         }
     }
@@ -89,13 +80,11 @@ class UnidadeController extends Controller
         $unid_data = $this->procurar_unid_por_id($user_unidade);
         $list_unid = $this->listarUnidadeUsuario($user_unidade);
 
-        // Retorne a view dashboard com os resultados da busca
         return view('app.unidade.unidades', compact('resultados_busca', 'user_data', 'unid_data', 'list_unid'));
     }
 
     public function cadastro(Request $request)
     {
-        // Obtenha o ID do usuário autenticado
         $idUsuario = Auth::id();
 
         $validatedData = $request->validate([
@@ -118,13 +107,11 @@ class UnidadeController extends Controller
             'id_usuario' => $idUsuario
         ]);
 
-        // Após o cadastro, redirecione de volta para a mesma página
         return redirect()->back()->with('success', 'unidade cadastrada com sucesso.');
     }
 
     public function atualizar(Request $request)
     {
-        // Obtenha o ID do usuário autenticado
         $idUsuario = Auth::id();
 
         $validatedData = $request->validate([
@@ -132,16 +119,16 @@ class UnidadeController extends Controller
             'endereco' => 'required',
         ]);
 
-        $check_name = DB::table('unidade')
-            ->where('nm_unidade', $validatedData['nome'])
-            ->where('id_unidade', $request->input('id'))
+        $existingUnid = DB::table('unidade')
             ->where('id_usuario', $idUsuario)
-            ->count();
- 
-        if ($check_name > 0) {
-            return ['errorMessage' => 'Este nome já está registrado. Tente outro.'];
+            ->where('nm_unidade', $validatedData['nome'])
+            ->where('id_unidade', '<>', $request->input('id'))
+            ->first();
+
+        if ($existingUnid) {
+            return ['errorMessage' => 'Este título já está sendo usado em outro notícia. Por favor, escolha um título diferente.'];
         }
- 
+
         $updated = DB::table('unidade')
             ->where('id_unidade', $request->input('id'))
             ->where('id_usuario', $idUsuario)
@@ -152,7 +139,7 @@ class UnidadeController extends Controller
  
         if ($updated) {
             return redirect()->route("app.unidade.index");
-            //return ['successMessage' => 'Informações da unidade atualizadas com sucesso'];
+            /*return ['successMessage' => 'Informações da unidade atualizadas com sucesso'];*/
         } else {
              return ['errorMessage' => 'unidade não encontrada'];
         }
