@@ -1,10 +1,22 @@
+:root{
+  --primary-100:#005B99;
+  --primary-200:#4e88ca;
+  --primary-300:#b7e9ff;
+  --accent-100:#FFD700;
+  --accent-200:#e9aa2b;
+  --text-100:#333333;
+  --text-200:#5c5c5c;
+  --bg-100:#F5F5F5;
+  --bg-200:#ebebeb;
+  --bg-300:#c2c2c2;
+}
+
 .custom-container {
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 20px;
   max-width: 800px;
-  /* Definir uma largura máxima para o container */
   width: 100%;
 }
 
@@ -18,26 +30,68 @@
 }
 
 .unidade {
-  margin: 0;
-  /* Remover margens padrão do body */
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: flex; 
+  flex-direction: row; 
+  margin: 5px; 
+  overflow: hidden; 
+  justify-content:center;
 }
 
-.bg-noticias{
-    background-color: #F3F3F3;
+.card-unidade{
+  max-height: 400px; 
+  overflow-y: auto; 
+  flex-direction: row; 
+  width: 441px;
+  justify-content: flex-end;
+}
+
+.bg-1{
+  background-color: #F3F3F3;
+}
+
+.p-25{
+  padding: 25px;
+}
+
+.titulo-max{
+  max-width: 60%;
 }
 
 .border-top-color{
-    border-top: #0B3142 2px solid;
+  border-top: #0B3142 2px solid;
 }
 
 .border-bottom-color{
-    border-bottom: #0B3142 2px solid;
+  border-bottom: #0B3142 2px solid;
 }
 
 .navbar{
   background: #0070C0;
   color: #FFFFFF;
+}
+
+.card-event{
+  background: linear-gradient(119deg, var(--primary-100) 26%, var(--primary-200) 66%);
+  color: var(--primary-300);
+  margin: 5px; 
+  flex-basis: calc(17% - 10px);
+}
+
+.sport-area{
+  display: flex; 
+  flex-direction: row; 
+  margin: 5px; 
+  flex-wrap: wrap; 
+  justify-content:center;
+}
+
+.h-50{
+  height: 50vh;
+}
+
+.nav-text-white{
+  color: #FFFFFF;
+}
+.nav-text-white:hover{
+  color:#b7e9ff;
 }

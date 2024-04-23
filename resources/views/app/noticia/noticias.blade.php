@@ -23,12 +23,13 @@
 
     <link rel="stylesheet" href="{{ asset('css/fonts.css') }}">
     <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/userPanel.css') }}">
     <title>Notícias</title>
 </head>
 
-<body bgcolor="#F9F6ED">
+<body>
     @include('layouts.navbar')
-    <div class="flex-1 ml-50 p-8">
+    <div class="flex-1 ml-50 p-8 pt-32">
         <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
             <form action="{{ route('app.noticia.buscar') }}" method="GET" class="flex items-center">
                 <label for="buscar" class="sr-only">Buscar</label>

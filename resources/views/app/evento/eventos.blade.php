@@ -11,12 +11,13 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
     <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/userPanel.css') }}">
     <title>Eventos</title>
 </head>
 
-<body bgcolor="#F9F6ED">
+<body>
     @include('layouts.navbar')
-    <div class="flex-1 ml-50 p-8">
+    <div class="flex-1 ml-50 p-8 pt-32">
         <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
             <form action="{{ route('app.evento.buscar') }}" method="GET" class="flex items-center">
                 <label for="buscar" class="sr-only">Buscar</label>

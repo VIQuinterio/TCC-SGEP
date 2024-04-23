@@ -23,34 +23,31 @@
 
     <link rel="stylesheet" href="{{ asset('css/fonts.css') }}">
     <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/userPanel.css') }}">
     <title>{{ $news_data->nm_titulo}}</title>
 </head>
 
-<body bgcolor="#F9F6ED">
+<body>
     @include('layouts.navbar')
-    <main class="mt-10">
+    <main class="pt-32">
 
-        <div class="mb-4 md:mb-0 w-full max-w-screen-md mx-auto relative" style="height: 24em;">
-            <div class="absolute left-0 bottom-0 w-full h-full z-10" style="background-image: linear-gradient(180deg,transparent,rgba(0,0,0,.7));"></div>
-            <img src="{{ asset('storage/'.$news_data->im_capa) }}" class="absolute left-0 top-0 w-full h-full z-0 object-cover" />
-            <div class="p-4 absolute bottom-0 left-0 z-20">
-                <a href="#" class="px-4 py-1 bg-black text-gray-200 inline-flex items-center justify-center mb-2"></a>
-                <h2 class="text-4xl font-semibold text-gray-100 leading-tight">
-                    {{ $news_data->nm_titulo}}
-                </h2>
-                <div class="flex mt-3">
-                    <div>
-                        <p class="font-semibold text-gray-400 text-xs">
-                            {{ date('d-m-Y', strtotime( $news_data->dt_noticia)) }}
-                        </p>
-                    </div>
+        <div class="container mx-auto">
+            <div class="max-w-screen-lg mx-auto">
+                <!-- Capa da notícia -->
+                <img src="{{ asset('storage/' . $news_data->im_capa) }}" alt="Capa da notícia" class="w-full mb-8 rounded-lg shadow-lg">
+    
+                <!-- Data da notícia -->
+                <p class="text-gray-500 text-sm">{{ \Carbon\Carbon::parse($news_data->dt_noticia)->translatedFormat('j \d\e F \d\e Y') }}</p>
+    
+                <!-- Título da notícia -->
+                <h1 class="text-3xl font-semibold mt-4 mb-8">{{ $news_data->nm_titulo }}</h1>
+    
+                <!-- Conteúdo da notícia -->
+                <div class="prose prose-lg">
+                    {!! $news_data->ds_conteudo !!}
                 </div>
             </div>
         </div>
-
-        <div class="conteudo px-4 lg:px-0 mt-12 text-gray-700 max-w-screen-md mx-auto text-lg leading-relaxed">
-            <div style="pointer-events: none">{!! $news_data->ds_conteudo !!}</div>
-        </div>        
     </main>
     @include('layouts.footer')
 </body>

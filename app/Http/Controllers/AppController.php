@@ -25,13 +25,15 @@ class AppController extends Controller
 
             $list_news = (new NoticiaController)->noticiasRecentes($user_id);
 
+            $other_news = (new NoticiaController)->listarNoticiaUsuario($user_id);
+
             $list_mod = (new ModalidadeController)->listarModalidades($user_id); 
 
             $list_event = (new EventoController)->listarEvento($user_id);
 
             $list_unid = (new UnidadeController)->listarUnidade($user_id);
                  
-            return view('app.home', compact('user_data', 'list_news', 'list_mod', 'list_event', 'list_unid'));
+            return view('app.home', compact('user_data', 'list_news', 'list_mod', 'list_event', 'list_unid', 'other_news'));
         } else {            
             return redirect()->route('login')->with('error', 'Você precisa fazer login como administrador para acessar o painel.');
         }

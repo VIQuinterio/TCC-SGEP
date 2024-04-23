@@ -6,9 +6,6 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
-// Lista para armazenar as coordenadas dos marcadores
-const markerCoords = [];
-
 // Geocodificação usando o serviço Nominatim
 document.querySelectorAll('#unidades [data-endereco]').forEach(elem => {
     const endereco = elem.dataset.endereco;
@@ -26,19 +23,10 @@ document.querySelectorAll('#unidades [data-endereco]').forEach(elem => {
                 L.marker([latitude, longitude]).addTo(map)
                     .bindPopup('Localização: ' + endereco);
 
-                // Armazene as coordenadas do marcador
-                markerCoords.push([latitude, longitude]);
+                // Ajuste a visualização do mapa para o centro do município
+                map.setView([latitude, longitude], 10); // Zoom nível 10 (ajuste conforme necessário)
             } else {
                 console.error('Nenhum resultado de geocodificação encontrado.');
-            }
-
-            // Verifique se todas as unidades foram processadas
-            if (markerCoords.length === document.querySelectorAll('#unidades [data-endereco]').length) {
-                // Calcule a visualização média para englobar todos os marcadores
-                const bounds = L.latLngBounds(markerCoords);
-
-                // Ajuste a visualização do mapa para englobar todos os marcadores
-                map.fitBounds(bounds);
             }
         })
         .catch(error => {
