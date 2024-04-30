@@ -45,26 +45,22 @@
                         #
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        <a
-                            href="{{ route('app.modalidade.index', ['sort' => 'nm_modalidade', 'direction' => 'asc']) }}">
-                            <div class="flex items-center">
-                                <!--Cliente-->
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24">
-                                    <path fill="currentColor"
-                                        d="M12 19.2c-2.5 0-4.71-1.28-6-3.2c.03-2 4-3.1 6-3.1s5.97 1.1 6 3.1a7.232 7.232 0 0 1-6 3.2M12 5a3 3 0 0 1 3 3a3 3 0 0 1-3 3a3 3 0 0 1-3-3a3 3 0 0 1 3-3m0-3A10 10 0 0 0 2 12a10 10 0 0 0 10 10a10 10 0 0 0 10-10c0-5.53-4.5-10-10-10" />
-                                </svg>
-
-                                <svg class="w-3 h-3 ms-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                    fill="currentColor" viewBox="0 0 24 24">
-                                    <path
-                                        d="M8.574 11.024h6.852a2.075 2.075 0 0 0 1.847-1.086 1.9 1.9 0 0 0-.11-1.986L13.736 2.9a2.122 2.122 0 0 0-3.472 0L6.837 7.952a1.9 1.9 0 0 0-.11 1.986 2.074 2.074 0 0 0 1.847 1.086Zm6.852 1.952H8.574a2.072 2.072 0 0 0-1.847 1.087 1.9 1.9 0 0 0 .11 1.985l3.426 5.05a2.123 2.123 0 0 0 3.472 0l3.427-5.05a1.9 1.9 0 0 0 .11-1.985 2.074 2.074 0 0 0-1.846-1.087Z" />
-                                </svg>
-
-                            </div>
+                        Nome
+                        <a href="{{ route('app.modalidade.index', ['sort' => 'nome', 'direction' => 'asc']) }}" class="sort-link">
+                                <span class="sort-arrow sorts asc" data-sort="nome" data-direction="asc">&#8593;</span>
+                        </a>
+                        <a href="{{ route('app.modalidade.index', ['sort' => 'nome', 'direction' => 'desc']) }}" class="sort-link">
+                                <span class="sort-arrow sorts desc" data-sort="nome" data-direction="desc">&#8595;</span>
+                        </a> 
                     </th>
                     <th scope="col" class="px-6 py-3">
                         Descrição
+                        <a href="{{ route('app.modalidade.index', ['sort' => 'descricao', 'direction' => 'asc']) }}" class="sort-link">
+                            <span class="sort-arrow sorts asc" data-sort="nome" data-direction="asc">&#8593;</span>
+                        </a>
+                        <a href="{{ route('app.modalidade.index', ['sort' => 'descricao', 'direction' => 'desc']) }}" class="sort-link">
+                                <span class="sort-arrow sorts desc" data-sort="nome" data-direction="desc">&#8595;</span>
+                        </a> 
                     </th>
                     <th scope="col" class="px-6 py-3">
                         Ação

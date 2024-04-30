@@ -39,11 +39,19 @@ class UnidadeController extends Controller
 
     public function listarUnidadeUsuario($id)
     {
-        $sort = request()->input('sort', 'id_usuario');
+        $sortMapping = [
+            'unidade' => 'nm_unidade',
+            'endereco' => 'ds_endereco',
+        ];
+
+        $sortKey = request()->input('sort', 'id_usuario');
+
+        $sortAttribute = $sortMapping[$sortKey] ?? $sortKey;
+
         $direction = request()->input('direction', 'asc');
 
         return Unidade::where('id_usuario', $id)
-            ->orderBy($sort, $direction)
+            ->orderBy($sortAttribute, $direction)
             ->paginate(10);
     }
 

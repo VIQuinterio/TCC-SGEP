@@ -33,19 +33,20 @@
 
         <div class="container mx-auto">
             <div class="max-w-screen-lg mx-auto">
-                <!-- Capa da notícia -->
                 <img src="{{ asset('storage/' . $news_data->im_capa) }}" alt="Capa da notícia" class="w-full mb-8 rounded-lg shadow-lg">
     
-                <!-- Data da notícia -->
-                <p class="text-gray-500 text-sm">{{ \Carbon\Carbon::parse($news_data->dt_noticia)->translatedFormat('j \d\e F \d\e Y') }}</p>
-    
-                <!-- Título da notícia -->
-                <h1 class="text-3xl font-semibold mt-4 mb-8">{{ $news_data->nm_titulo }}</h1>
-    
-                <!-- Conteúdo da notícia -->
-                <div class="prose prose-lg">
-                    {!! $news_data->ds_conteudo !!}
+                <div class="calendario news-data rounded">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="white" d="M7 11h2v2H7zm14-6v14c0 1.11-.89 2-2 2H5a2 2 0 0 1-2-2V5c0-1.1.9-2 2-2h1V1h2v2h8V1h2v2h1a2 2 0 0 1 2 2M5 7h14V5H5zm14 12V9H5v10zm-4-6v-2h2v2zm-4 0v-2h2v2zm-4 2h2v2H7zm8 2v-2h2v2zm-4 0v-2h2v2z"/></svg>
+                    <p class="ml-1 text-white text-sm news-text">{{ \Carbon\Carbon::parse($news_data->dt_noticia)->translatedFormat('j \d\e F \d\e Y') }}</p>
                 </div>
+
+                <h1 class="text-3xl font-semibold mt-8 mb-8">{{ $news_data->nm_titulo }}</h1>
+
+                <div class="truncate">
+                    {!! str_replace('contenteditable="true"', '', $news_data->ds_conteudo) !!}
+                </div>
+                
+                
             </div>
         </div>
     </main>

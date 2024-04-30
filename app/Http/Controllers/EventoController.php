@@ -47,14 +47,24 @@ class EventoController extends Controller
 
     public function listarEventoUsuario($id)
     {
-        $sort = request()->input('sort', 'e.id_usuario');
+        $sortMapping = [
+            'nome' => 'e.nm_evento',
+            'data' => 'e.dt_evento',
+            'unidade' => 'u.nm_unidade',
+            'descricao' => 'e.ds_evento',
+        ];
+
+        $sortKey = request()->input('sort', 'e.id_usuario');
+
+        $sortAttribute = $sortMapping[$sortKey] ?? $sortKey;
+
         $direction = request()->input('direction', 'asc');
     
         return DB::table('evento as e')
             ->join('unidade as u', 'e.id_unidade', '=', 'u.id_unidade')
             ->select('e.id_evento', 'e.nm_evento', 'e.ds_evento', 'e.dt_evento', 'u.nm_unidade')            
             ->where('e.id_usuario', $id)
-            ->orderBy($sort, $direction)
+            ->orderBy($sortAttribute, $direction)
             ->paginate(10);
     }
     

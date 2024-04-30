@@ -49,6 +49,29 @@
   background-color: #F3F3F3;
 }
 
+.calendario {
+  display: flex;
+  align-items: center;
+  max-width: 15rem; /* Defina uma largura máxima */
+}
+
+.news-data {
+  width: 20%; /* Ajuste a largura do ícone */
+  height: auto; /* Permita que a altura seja ajustada automaticamente */
+  color: var(--bg-100);
+  background-color: var(--primary-200);
+}
+
+.news-text {
+  width: 80%; /* Use o restante do espaço para o texto */
+}
+
+@media (max-width: 768px) {
+  .calendario {
+    max-width: 10rem; /* Ajuste a largura máxima para dispositivos menores */
+  }
+}
+
 .p-25{
   padding: 25px;
 }
@@ -77,7 +100,7 @@
   flex-basis: calc(17% - 10px);
 }
 
-.sport-area{
+.area{
   display: flex; 
   flex-direction: row; 
   margin: 5px; 
@@ -92,6 +115,21 @@
 .nav-text-white{
   color: #FFFFFF;
 }
+
 .nav-text-white:hover{
   color:#b7e9ff;
+}
+
+.sorts {
+  color: rgb(155, 155, 155);
+  font-size: 20px;
+  pointer-events: stroke;
+}
+
+.sorts:hover {
+  color: white;
+}
+
+.sort-link:focus .sorts {
+  color: white;
 }

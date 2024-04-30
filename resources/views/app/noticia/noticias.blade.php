@@ -64,32 +64,29 @@
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
             <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                 <tr style="background-color: #0B3142; color:aliceblue;">
-                    <th scope="col" class="px-6 py-3">
+                    <th scope="col" class="px-6 py-3 text-l">
                         #
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        <a href="{{ route('app.noticia.index', ['sort' => 'nm_titulo', 'direction' => 'asc']) }}">
-                            <div class="flex items-center">
-                                <!--Cliente-->
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24">
-                                    <path fill="currentColor"
-                                        d="M12 19.2c-2.5 0-4.71-1.28-6-3.2c.03-2 4-3.1 6-3.1s5.97 1.1 6 3.1a7.232 7.232 0 0 1-6 3.2M12 5a3 3 0 0 1 3 3a3 3 0 0 1-3 3a3 3 0 0 1-3-3a3 3 0 0 1 3-3m0-3A10 10 0 0 0 2 12a10 10 0 0 0 10 10a10 10 0 0 0 10-10c0-5.53-4.5-10-10-10" />
-                                </svg>
-
-                                <svg class="w-3 h-3 ms-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                    fill="currentColor" viewBox="0 0 24 24">
-                                    <path
-                                        d="M8.574 11.024h6.852a2.075 2.075 0 0 0 1.847-1.086 1.9 1.9 0 0 0-.11-1.986L13.736 2.9a2.122 2.122 0 0 0-3.472 0L6.837 7.952a1.9 1.9 0 0 0-.11 1.986 2.074 2.074 0 0 0 1.847 1.086Zm6.852 1.952H8.574a2.072 2.072 0 0 0-1.847 1.087 1.9 1.9 0 0 0 .11 1.985l3.426 5.05a2.123 2.123 0 0 0 3.472 0l3.427-5.05a1.9 1.9 0 0 0 .11-1.985 2.074 2.074 0 0 0-1.846-1.087Z" />
-                                </svg>
-
-                            </div>
-                    </th>
+                        Título
+                        <a href="{{ route('app.noticia.index', ['sort' => 'titulo', 'direction' => 'asc']) }}" class="sort-link">
+                            <span class="sort-arrow sorts asc" data-sort="titulo" data-direction="asc">&#8593;</span>
+                        </a>
+                        <a href="{{ route('app.noticia.index', ['sort' => 'titulo', 'direction' => 'desc']) }}" class="sort-link">
+                            <span class="sort-arrow sorts desc" data-sort="titulo" data-direction="desc">&#8595;</span>
+                        </a>                                                
+                    </th>                    
                     <th scope="col" class="px-6 py-3">
                         Conteúdo
                     </th>
                     <th scope="col" class="px-6 py-3">
                         Data
+                        <a href="{{ route('app.noticia.index', ['sort' => 'data', 'direction' => 'asc']) }}"class="sort-link">
+                            <span class="sort-arrow sorts asc" data-sort="data" data-direction="asc">&#8593;</span>
+                        </a>
+                        <a href="{{ route('app.noticia.index', ['sort' => 'data', 'direction' => 'desc']) }}" class="sort-link">
+                            <span class="sort-arrow sorts desc" data-sort="data" data-direction="desc">&#8595;</span>
+                        </a>
                     </th>
                     <th scope="col" class="px-6 py-3">
                         Ação
@@ -233,7 +230,7 @@
             @endif
         </div>
     </div>
-    @if (session('success'))
+    <!--@if (session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
@@ -241,7 +238,7 @@
         <div class="alert alert-success">
             {{ session('error') }}
         </div>
-    @endif
+    @endif-->
     @if (isset($resultados_busca) && count($resultados_busca) > 0)
         @foreach ($resultados_busca as $news)
             @include('app.noticia.editar')
@@ -253,122 +250,140 @@
     @endif
 
     <!-- Main modal -->
-    @extends('layouts.modal')
-    @section('titulo', 'Cadastrar noticia')
-    @section('form')
-        <form class="space-y-4" action="{{ route('app.noticia.cadastro') }}" method="POST"
-            enctype="multipart/form-data">
-            @csrf
-            <div class="grid gap-4 mb-4 grid-cols-2">
-                <div class="col-span-2 sm:col-span-1">
-                    <label for="titulo"
-                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Título</label>
-                    <input type="text" name="titulo" id="titulo"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                        required>
+    <div id="abrir-modal" data-modal-backdrop="static" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative p-4 w-full max-w-xl max-h-full" style="max-width: 76rem;">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                <!-- Modal header -->
+                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                        @yield('titulo')
+                    </h3>
+                    <button type="button" class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="abrir-modal">
+                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                        </svg>
+                        <span class="sr-only">@yield('titulo')</span>
+                    </button>
                 </div>
+                <!-- Modal body -->
+                <div class="p-4 md:p-5">
+                    <form class="space-y-4" action="{{ route('app.noticia.cadastro') }}" method="POST"
+                        enctype="multipart/form-data">
+                        @csrf
+                        <div class="grid gap-4 mb-4 grid-cols-2">
+                            <div class="col-span-2 sm:col-span-1">
+                                <label for="titulo"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Título</label>
+                                <input type="text" name="titulo" id="titulo"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                    required>
+                            </div>
 
-                <div class="col-span-2 sm:col-span-1">
-                    <label for="data"
-                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Data</label>
-                    <input type="date" name="data" id="data"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                        required>
-                </div>
+                            <div class="col-span-2 sm:col-span-1">
+                                <label for="data"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Data</label>
+                                <input type="date" name="data" id="data"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                    required>
+                            </div>
 
-                <div class="col-span-2">
-                    <label for="imagem"
-                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Capa</label>
-                    <input id="imagem" name="imagem" type="file"
-                        class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 
-                        dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                        aria-describedby="imagem" required>
-                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="img">Formatos suportados: SVG, PNG,
-                        JPG ou JPEG</p>
-                </div>
+                            <div class="col-span-2">
+                                <label for="imagem"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Capa</label>
+                                <input id="imagem" name="imagem" type="file"
+                                    class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 
+                                    dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                                    aria-describedby="imagem" required>
+                                <p class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="img">Formatos suportados: SVG, PNG,
+                                    JPG ou JPEG</p>
+                            </div>
 
-                <div class="col-span-2" style="margin-bottom: auto;">
-                    <div id="toolbar-cadastro"
-                        class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 
-                        dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                        style="border-bottom-right-radius: 0; border-bottom-left-radius: 0;">
-                        <span class="ql-formats">
-                            <select class="ql-font">
-                                <option class="ql-font-arial" value="arial" selected>Arial</option>
-                                <option class="ql-font-helvetica" value="helvetica">Helvetica</option>
-                                <option class="ql-font-impact" value="impact">Impact</option>
-                                <option value="monospace">Monospace</option>
-                                <option class="ql-font-roboto-mono" value="roboto-mono">Roboto Mono</option>
-                                <option value="sans-serif">Sans Serif</option>
-                                <option value="serif">Serif</option>
-                                <option class="ql-font-verdana" value="verdana">Verdana</option>
-                            </select>
-                            <select class="ql-size" style="width: 76px">
-                                <option value="small">Pequeno</option>
-                                <option selected></option>
-                                <option value="large">Grande</option>
-                                <option value="huge">Enorme</option>
-                            </select>
-                            <select class="ql-header" style="width: 76px">
-                                <option value="1">Título 1</option>
-                                <option value="2">Título 2</option>
-                                <option value="3">Título 3</option>
-                                <option value="4">Título 4</option>
-                                <option value="5">Título 5</option>
-                                <option value="6">Título 6</option>
-                                <option selected></option>
-                            </select>
-                        </span>
+                            <div class="col-span-2" style="margin-bottom: auto;">
+                                <div id="toolbar-cadastro"
+                                    class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 
+                                    dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                                    style="border-bottom-right-radius: 0; border-bottom-left-radius: 0;">
+                                    <span class="ql-formats">
+                                        <select class="ql-font">
+                                            <option class="ql-font-arial" value="arial" selected>Arial</option>
+                                            <option class="ql-font-helvetica" value="helvetica">Helvetica</option>
+                                            <option class="ql-font-impact" value="impact">Impact</option>
+                                            <option value="monospace">Monospace</option>
+                                            <option class="ql-font-roboto-mono" value="roboto-mono">Roboto Mono</option>
+                                            <option value="sans-serif">Sans Serif</option>
+                                            <option value="serif">Serif</option>
+                                            <option class="ql-font-verdana" value="verdana">Verdana</option>
+                                        </select>
+                                        <select class="ql-size" style="width: 76px">
+                                            <option value="small">Pequeno</option>
+                                            <option selected></option>
+                                            <option value="large">Grande</option>
+                                            <option value="huge">Enorme</option>
+                                        </select>
+                                        <select class="ql-header" style="width: 76px">
+                                            <option value="1">Título 1</option>
+                                            <option value="2">Título 2</option>
+                                            <option value="3">Título 3</option>
+                                            <option value="4">Título 4</option>
+                                            <option value="5">Título 5</option>
+                                            <option value="6">Título 6</option>
+                                            <option selected></option>
+                                        </select>
+                                    </span>
 
-                        <span class="ql-formats">
-                            <button class="ql-bold"></button>
-                            <button class="ql-italic"></button>
-                            <button class="ql-underline"></button>
-                            <button class="ql-strike"></button>
-                            <button class="ql-blockquote"></button>
-                            <select class="ql-color"></select>
-                            <select class="ql-background"></select>
-                            <button class="ql-clean"></button>
-                        </span>
+                                    <span class="ql-formats">
+                                        <button class="ql-bold"></button>
+                                        <button class="ql-italic"></button>
+                                        <button class="ql-underline"></button>
+                                        <button class="ql-strike"></button>
+                                        <button class="ql-blockquote"></button>
+                                        <select class="ql-color"></select>
+                                        <select class="ql-background"></select>
+                                        <button class="ql-clean"></button>
+                                    </span>
 
-                        <span class="ql-formats">
-                            <button class="ql-list" value="ordered"></button>
-                            <button class="ql-list" value="bullet"></button>
-                            <button class="ql-indent" value="-1"></button>
-                            <button class="ql-indent" value="+1"></button>
-                            <button class="ql-direction" value="rtl"></button>
-                            <button class="ql-align" value=""></button>
-                            <button class="ql-align" value="center"></button>
-                            <button class="ql-align" value="right"></button>
-                            <button class="ql-align" value="justify"></button>
-                        </span>
+                                    <span class="ql-formats">
+                                        <button class="ql-list" value="ordered"></button>
+                                        <button class="ql-list" value="bullet"></button>
+                                        <button class="ql-indent" value="-1"></button>
+                                        <button class="ql-indent" value="+1"></button>
+                                        <button class="ql-direction" value="rtl"></button>
+                                        <button class="ql-align" value=""></button>
+                                        <button class="ql-align" value="center"></button>
+                                        <button class="ql-align" value="right"></button>
+                                        <button class="ql-align" value="justify"></button>
+                                    </span>
 
-                        <span class="ql-formats">
-                            <button class="ql-link"></button>
-                            <button class="ql-image"></button>
-                            <button class="ql-video"></button>
-                        </span>
-                    </div>
+                                    <span class="ql-formats">
+                                        <button class="ql-link"></button>
+                                        <button class="ql-image"></button>
+                                        <button class="ql-video"></button>
+                                    </span>
+                                </div>
 
-                    <div id="editor-cadastro"
-                        class="block w-full px-0 text-sm text-gray-800 px-4 py-2 bg-white rounded-b-lg 
-                            border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400">
-                    </div>
+                                <div id="editor-cadastro"
+                                    class="block w-full px-0 text-sm text-gray-800 px-4 py-2 bg-white rounded-b-lg 
+                                        border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400">
+                                </div>
 
-                    <textarea th:field="*{content}" class="form-control" name="conteudo" style="display:none"
-                        id="hiddenTextarea-cadastro"></textarea>
+                                <textarea th:field="*{content}" class="form-control" name="conteudo" style="display:none"
+                                    id="hiddenTextarea-cadastro"></textarea>
 
-                </div>
-                <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-                    <button type="submit"
-                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Adicionar</button>
-                    <button data-modal-hide="abrir-modal" type="button"
-                        class="ml-5 ms-3 text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Cancelar</button>
+                            </div>
+                            <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                                <button type="submit"
+                                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Adicionar</button>
+                                <button data-modal-hide="abrir-modal" type="button"
+                                    class="ml-5 ms-3 text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Cancelar</button>
+                            </div>
+                        </div>
+                        <script src="{{ asset('js/quill.js') }}"></script>
+                    </form>
                 </div>
             </div>
-            <script src="{{ asset('js/quill.js') }}"></script>
-        </form>
-    @endsection
+        </div>
+    </div>
 
     <script>
         document.addEventListener('click', function(event) {
@@ -388,8 +403,31 @@
                 placeholder: 'Escrever o conteúdo da notícia...',
                 theme: 'snow'
             });                        
-        @endforeach       
+        @endforeach  
+        
+        document.addEventListener('DOMContentLoaded', function () {
+            const sortArrows = document.querySelectorAll('.sort-arrow');
+
+            sortArrows.forEach(arrow => {
+                arrow.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    const sortAttribute = this.dataset.sort;
+                    let direction = this.dataset.direction;
+
+                    // Alterna entre asc e desc
+                    direction = direction === 'asc' ? 'desc' : 'asc';
+
+                    // Atualiza a direção no dataset
+                    this.dataset.direction = direction;
+
+                    // Redireciona para a URL com os parâmetros atualizados
+                    window.location.href = `{{ route('app.noticia.index') }}?sort=${sortAttribute}&direction=${direction}`;
+                });
+            });
+        });
+
     </script>
+    <script src="{{ asset('js/sort.js') }}"></script>
     <script src="{{ asset('js/modal.js') }}"></script>
 </body>
 

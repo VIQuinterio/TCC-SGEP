@@ -48,13 +48,27 @@ class NoticiaController extends Controller
     
     public function listarNoticiaUsuario($id)
     {
-        $sort = request()->input('sort', 'id_usuario');
+        // Mapeamento de nomes amigáveis para nomes reais dos atributos do banco de dados
+        $sortMapping = [
+            'titulo' => 'nm_titulo',
+            'data' => 'dt_noticia',
+            // Adicione outros mapeamentos conforme necessário
+        ];
+    
+        // Obtenha o parâmetro de ordenação da solicitação
+        $sortKey = request()->input('sort', 'id_usuario');
+    
+        // Verifique se o nome do atributo de ordenação é um nome amigável e, se for, obtenha o nome real do atributo
+        $sortAttribute = $sortMapping[$sortKey] ?? $sortKey;
+    
+        // Obtenha a direção de ordenação da solicitação
         $direction = request()->input('direction', 'asc');
     
         return Noticia::where('id_usuario', $id)
-            ->orderBy($sort, $direction)
+            ->orderBy($sortAttribute, $direction)
             ->paginate(10);
     }
+    
     
     public function buscarNoticia($key, $id)
     {

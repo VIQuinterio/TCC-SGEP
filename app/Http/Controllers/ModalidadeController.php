@@ -44,11 +44,19 @@ class ModalidadeController extends Controller
     
     public function listarModalidadeUsuario($id)
     {
-        $sort = request()->input('sort', 'id_usuario');
-        $direction = request()->input('direction', 'asc');
+        $sortMapping = [
+            'nome' => 'nm_modalidade',
+            'descricao' => 'ds_modalidade',
+        ];
 
+        $sortKey = request()->input('sort', 'id_usuario');
+
+        $sortAttribute = $sortMapping[$sortKey] ?? $sortKey;
+
+        $direction = request()->input('direction', 'asc');
+    
         return Modalidade::where('id_usuario', $id)
-            ->orderBy($sort, $direction)
+            ->orderBy($sortAttribute, $direction)
             ->paginate(10);
     }
 
