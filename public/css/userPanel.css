@@ -6,6 +6,7 @@
   --accent-200:#e9aa2b;
   --text-100:#333333;
   --text-200:#5c5c5c;
+  --text-150: #444;
   --bg-100:#F5F5F5;
   --bg-200:#ebebeb;
   --bg-300:#c2c2c2;
@@ -56,19 +57,33 @@
 }
 
 .news-data {
-  width: 20%; /* Ajuste a largura do ícone */
   height: auto; /* Permita que a altura seja ajustada automaticamente */
-  color: var(--bg-100);
-  background-color: var(--primary-200);
+  color: var(--text-150);
+  /*background-color: var(--primary-200);*/
 }
 
 .news-text {
   width: 80%; /* Use o restante do espaço para o texto */
 }
 
-@media (max-width: 768px) {
+.capa {
+  max-width: 100%;
+  height: auto;
+}
+
+.content-capa{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+@media screen and (max-width: 300px) {
   .calendario {
-    max-width: 10rem; /* Ajuste a largura máxima para dispositivos menores */
+    max-width: 12rem; /* Ajuste a largura máxima para dispositivos menores */
+  }
+  
+  .capa{
+    max-width: 50%;
   }
 }
 
@@ -132,4 +147,13 @@
 
 .sort-link:focus .sorts {
   color: white;
+}
+
+legend{
+  font-style: italic;
+  color: var(--text-150);
+}
+
+.text-gray{
+  color: var(--text-150);
 }

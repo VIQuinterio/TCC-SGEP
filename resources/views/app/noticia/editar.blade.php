@@ -19,7 +19,7 @@
                 <form class="space-y-4" action="{{ route('app.noticia.atualizar') }}" method="POST" id="form_edicao" enctype="multipart/form-data">
                     @csrf
                     <div class="grid gap-4 mb-4 grid-cols-2">
-                        <div class="col-span-2 sm:col-span-1">                            
+                        <div class="col-span-2">                            
                             <input type="hidden" name="id" value="{{$news->id_noticia}}">
                             <label for="titulo" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Título</label>
                             <input type="text" name="titulo" id="titulo" value="{{$news->nm_titulo}}"
@@ -27,11 +27,18 @@
                             required>
                         </div>
                         <div class="col-span-2 sm:col-span-1">
+                            <label for="autor"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Autor</label>
+                            <input type="text" name="autor" id="autor" value="{{$news->nm_autor}}"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                required>
+                        </div>
+                        <div class="col-span-2 sm:col-span-1">
                             <label for="data"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Data</label>
-                            <input type="date" name="data" id="data" value="{{$news->dt_noticia}}"
+                            <input type="datetime-local" name="data" id="data" value="{{$news->dt_noticia}}"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                            required>
+                            required disabled>
                         </div>
                         <div class="col-span-2">                                        
                             <label for="imagem"
@@ -40,6 +47,13 @@
                             class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 
                             dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="imagem">
                             <p class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="img">Formatos suportados: SVG, PNG, JPG ou JPEG</p>
+                        </div>
+                        <div class="col-span-2 sm:col-span-1">
+                            <label for="legenda"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Legenda da capa</label>
+                            <input type="text" name="legenda" id="legenda" value="{{$news->ds_legenda}}"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                required>
                         </div>
                         <div class="col-span-2" style="margin-bottom: auto;">               
                             <div id="toolbar-edicao-{{$news->id_noticia}}" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 

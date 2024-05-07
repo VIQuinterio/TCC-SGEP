@@ -30,22 +30,25 @@
 <body>
     @include('layouts.navbar')
     <main class="pt-32">
-
         <div class="container mx-auto">
             <div class="max-w-screen-lg mx-auto">
-                <img src="{{ asset('storage/' . $news_data->im_capa) }}" alt="Capa da notícia" class="w-full mb-8 rounded-lg shadow-lg">
-    
-                <div class="calendario news-data rounded">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="white" d="M7 11h2v2H7zm14-6v14c0 1.11-.89 2-2 2H5a2 2 0 0 1-2-2V5c0-1.1.9-2 2-2h1V1h2v2h8V1h2v2h1a2 2 0 0 1 2 2M5 7h14V5H5zm14 12V9H5v10zm-4-6v-2h2v2zm-4 0v-2h2v2zm-4 2h2v2H7zm8 2v-2h2v2zm-4 0v-2h2v2z"/></svg>
-                    <p class="ml-1 text-white text-sm news-text">{{ \Carbon\Carbon::parse($news_data->dt_noticia)->translatedFormat('j \d\e F \d\e Y') }}</p>
-                </div>
 
-                <h1 class="text-3xl font-semibold mt-8 mb-8">{{ $news_data->nm_titulo }}</h1>
+                <h1 class="text-5xl font-semibold mt-8 mb-8">{{ $news_data->nm_titulo }}</h1>
 
-                <div class="truncate">
-                    {!! str_replace('contenteditable="true"', '', $news_data->ds_conteudo) !!}
+                <h5 class="text-gray">{{$news_data->nm_autor}}</h5>
+                <div class="calendario news-data rounded mb-5">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#5c5c5c" d="M7 11h2v2H7zm14-6v14c0 1.11-.89 2-2 2H5a2 2 0 0 1-2-2V5c0-1.1.9-2 2-2h1V1h2v2h8V1h2v2h1a2 2 0 0 1 2 2M5 7h14V5H5zm14 12V9H5v10zm-4-6v-2h2v2zm-4 0v-2h2v2zm-4 2h2v2H7zm8 2v-2h2v2zm-4 0v-2h2v2z"/></svg>
+                    <p class="ml-1 text-gray text-sm news-text">{{ \Carbon\Carbon::parse($news_data->dt_noticia)->translatedFormat('j \d\e F \d\e Y') }}</p>
                 </div>
                 
+                <div class="content-capa">
+                    <img src="{{ asset('storage/' . $news_data->im_capa) }}" alt="Capa da notícia" class="capa mb-5 rounded-lg shadow-lg object-cover">
+                    <legend>{{$news_data->ds_legenda}}</legend>
+                </div>
+            
+                <div class="truncate pt-5">
+                    {!! str_replace('contenteditable="true"', '', $news_data->ds_conteudo) !!}
+                </div>
                 
             </div>
         </div>

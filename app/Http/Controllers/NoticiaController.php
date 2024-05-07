@@ -106,20 +106,7 @@ class NoticiaController extends Controller
         $validatedData = $request->validate([
             'titulo' => 'required',
             'conteudo' => 'required',
-            'imagem' => 'required|image|mimes:jpeg,png,jpg,svg|max:2048', 
-            'data' => [
-                'required',
-                'date_format:Y-m-d',
-                function ($attribute, $value, $fail) {
-                    $date = strtotime($value);
-                    $minDate = strtotime('2000-01-01');
-                    $maxDate = strtotime('2030-12-31');
-
-                    if ($date < $minDate || $date > $maxDate) {
-                        $fail('A data deve estar entre os anos 2000 e 2030.');
-                    }
-                },
-            ],
+            'imagem' => 'required|image|mimes:jpeg,png,jpg,svg|max:10240',//10MB
         ]);
 
         if ($request->hasFile('imagem')) {
@@ -130,7 +117,7 @@ class NoticiaController extends Controller
                 'nm_titulo' => $validatedData['titulo'],
                 'ds_conteudo' => $validatedData['conteudo'],
                 'im_capa' => $imagemPath, 
-                'dt_noticia' => $validatedData['data'],
+                'dt_noticia' => now(),
                 'id_usuario' => $idUsuario
             ]);
 

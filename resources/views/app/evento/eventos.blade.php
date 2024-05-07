@@ -62,12 +62,21 @@
                         </a> 
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        Data
-                        <a href="{{ route('app.evento.index', ['sort' => 'data', 'direction' => 'asc']) }}" class="sort-link">
-                            <span class="sort-arrow sorts asc" data-sort="data" data-direction="asc">&#8593;</span>
+                        Data Início
+                        <a href="{{ route('app.evento.index', ['sort' => 'dataInicio', 'direction' => 'asc']) }}" class="sort-link">
+                            <span class="sort-arrow sorts asc" data-sort="dataInicio" data-direction="asc">&#8593;</span>
                         </a>
-                        <a href="{{ route('app.evento.index', ['sort' => 'data', 'direction' => 'desc']) }}" class="sort-link">
-                            <span class="sort-arrow sorts desc" data-sort="data" data-direction="desc">&#8595;</span>
+                        <a href="{{ route('app.evento.index', ['sort' => 'dataInicio', 'direction' => 'desc']) }}" class="sort-link">
+                            <span class="sort-arrow sorts desc" data-sort="dataInicio" data-direction="desc">&#8595;</span>
+                        </a> 
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Data Fim
+                        <a href="{{ route('app.evento.index', ['sort' => 'dataFim', 'direction' => 'asc']) }}" class="sort-link">
+                            <span class="sort-arrow sorts asc" data-sort="dataFim" data-direction="asc">&#8593;</span>
+                        </a>
+                        <a href="{{ route('app.evento.index', ['sort' => 'dataFim', 'direction' => 'desc']) }}" class="sort-link">
+                            <span class="sort-arrow sorts desc" data-sort="dataFim" data-direction="desc">&#8595;</span>
                         </a> 
                     </th>
                     <th scope="col" class="px-6 py-3">
@@ -100,7 +109,10 @@
                                     {{ $event->ds_evento }}
                                 </td>
                                 <td class="px-6 py-4 w-auto">
-                                    {{ date('d-m-Y', strtotime( $event->dt_evento)) }}
+                                    {{ date('d-m-Y', strtotime( $event->dt_evento_inicio)) }}
+                                </td>
+                                <td class="px-6 py-4 w-auto">
+                                    {{ date('d-m-Y', strtotime( $event->dt_evento_fim)) }}
                                 </td>
                                 <td class="px-6 py-4 w-auto">
                                     {{ $event->nm_unidade }}
@@ -148,7 +160,10 @@
                                     {{ $event->ds_evento }}
                                 </td>
                                 <td class="px-6 py-4 w-auto">
-                                    {{ date('d-m-Y', strtotime( $event->dt_evento)) }}
+                                    {{ date('d-m-Y', strtotime( $event->dt_evento_inicio)) }}
+                                </td>
+                                <td class="px-6 py-4 w-auto">
+                                    {{ date('d-m-Y', strtotime( $event->dt_evento_fim)) }}
                                 </td>
                                 <td class="px-6 py-4 w-auto">
                                     {{ $event->nm_unidade }}
@@ -220,7 +235,7 @@
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                             required>
                     </div>
-                    <div class="col-span-2 sm:col-span-1">
+                    <div class="col-span-2">
                         <label for="descricao"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descrição</label>
                         <input type="text" name="descricao" id="descricao"
@@ -228,9 +243,16 @@
                             required>
                     </div>
                     <div class="col-span-2 sm:col-span-1">
-                        <label for="data"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Data do Evento</label>
-                        <input type="date" name="data" id="data"
+                        <label for="dataInicio"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Data Início do Evento</label>
+                        <input type="date" name="dataInicio" id="dataInicio"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                            required>
+                    </div>
+                    <div class="col-span-2 sm:col-span-1">
+                        <label for="dataFim"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Data Fim do Evento</label>
+                        <input type="date" name="dataFim" id="dataFim"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                             required>
                     </div>

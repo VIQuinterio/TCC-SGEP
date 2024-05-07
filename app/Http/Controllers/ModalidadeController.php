@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Modalidade;
+use App\Models\Unidade;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -27,8 +28,10 @@ class ModalidadeController extends Controller
                 $mod_data = $this->procurar_mod_por_id($user_modalidade);
                 
                 $list_mods = $this->listarModalidadeUsuario($user_modalidade);
+
+                $list_unidades = $this->listarUnidadeUsuario($user_id);
                 
-                return view('app.modalidade.modalidades', compact('user_data', 'mod_data', 'list_mods'));
+                return view('app.modalidade.modalidades', compact('user_data', 'mod_data', 'list_mods', 'list_unidades'));
             } else {                
                 return redirect()->route('login')->with('error', 'Você não tem uma modalidade associada.');
             }
@@ -37,37 +40,54 @@ class ModalidadeController extends Controller
         }
     }
 
+    protected function listarUnidadeUsuario($idUsuario)
+    {
+        return Unidade::where('id_usuario', $idUsuario)->get();
+    }
+
     public function listarModalidades($id){
-        $mod = DB::table('modalidade')->where('id_usuario', $id)->get();
+
+        $mod = DB::table('modalidade as m')
+            ->join('unidade as u', 'm.id_unidade', '=', 'u.id_unidade')
+            ->select('m.id_modalidade', 'm.nm_modalidade', 'm.ds_modalidade', 'u.nm_unidade')
+            ->where('m.id_usuario', $id)
+            ->get();
+        
         return $mod;
+        
     }
     
     public function listarModalidadeUsuario($id)
     {
         $sortMapping = [
-            'nome' => 'nm_modalidade',
-            'descricao' => 'ds_modalidade',
+            'nome' => 'm.nm_modalidade',
+            'descricao' => 'm.ds_modalidade',
+            'unidade' => 'u.nm_unidade',
         ];
 
-        $sortKey = request()->input('sort', 'id_usuario');
+        $sortKey = request()->input('sort', 'm.id_usuario');
 
         $sortAttribute = $sortMapping[$sortKey] ?? $sortKey;
 
         $direction = request()->input('direction', 'asc');
-    
-        return Modalidade::where('id_usuario', $id)
+
+        return DB::table('modalidade as m')
+            ->join('unidade as u', 'm.id_unidade', '=', 'u.id_unidade')
+            ->select('m.id_modalidade', 'm.nm_modalidade', 'm.ds_modalidade', 'u.nm_unidade')
+            ->where('m.id_usuario', $id)
             ->orderBy($sortAttribute, $direction)
             ->paginate(10);
     }
 
     public function buscarModalidade($key, $id)
     {
-        $mod = DB::table('modalidade')
-            ->where('id_usuario', $id)
-            ->where(function ($query) use ($key) {
-                $query->where('nm_modalidade', 'like', "%$key%")
-                    ->orWhere('ds_modalidade', 'like', "%$key%");
-            })            
+        $mod = DB::table('modalidade as m')
+            ->join('unidade as u', 'm.id_unidade', '=', 'u.id_unidade')
+            ->select('m.id_modalidade', 'm.nm_modalidade', 'm.ds_modalidade', 'u.nm_unidade')
+            ->where('m.id_usuario', $id)
+            ->orWhere('m.nm_modalidade', 'like', '%' . $key . '%')
+            ->orWhere('m.ds_modalidade', 'like', '%' . $key . '%')
+            ->orWhere('u.nm_unidade', 'like', '%' . $key . '%')
             ->paginate(10); 
 
         return $mod;
@@ -85,8 +105,9 @@ class ModalidadeController extends Controller
         $user_data = $this->procurar_user_por_id($user_modalidade);
         $mod_data = $this->procurar_mod_por_id($user_modalidade);
         $list_mods = $this->listarModalidadeUsuario($user_modalidade);
+        $list_unidades = $this->listarUnidadeUsuario($idUsuario);
 
-        return view('app.modalidade.modalidades', compact('resultados_busca', 'user_data', 'mod_data', 'list_mods'));
+        return view('app.modalidade.modalidades', compact('resultados_busca', 'user_data', 'mod_data', 'list_mods', 'list_unidades'));
     }
 
     public function cadastro(Request $request)
@@ -96,11 +117,13 @@ class ModalidadeController extends Controller
         $validatedData = $request->validate([
             'nome' => 'required',
             'descricao' => 'required',
+            'id_unidade' => 'required',
         ]);
 
         $check_name = DB::table('modalidade')
             ->where('nm_modalidade', $validatedData['nome'])
             ->where('id_usuario', $idUsuario)
+            ->where('id_unidade', '<>', $request->input('id'))
             ->count();
 
         if ($check_name > 0) {
@@ -110,6 +133,7 @@ class ModalidadeController extends Controller
         DB::table('modalidade')->insert([
             'nm_modalidade' => $validatedData['nome'],
             'ds_modalidade' => $validatedData['descricao'],
+            'id_unidade' => $validatedData['id_unidade'],
             'id_usuario' => $idUsuario
         ]);
 
@@ -123,16 +147,17 @@ class ModalidadeController extends Controller
         $validatedData = $request->validate([
             'nome' => 'required',
             'descricao' => 'required',
+            'id_unidade' => 'required',
         ]);
 
         $existingMod = DB::table('modalidade')
             ->where('id_usuario', $idUsuario)
             ->where('nm_modalidade', $validatedData['nome'])
-            ->where('id_modalidade', '<>', $request->input('id'))
+            ->where('id_unidade', '<>', $request->input('id'))
             ->first();
     
         if ($existingMod) {
-            return ['errorMessage' => 'Este título já está sendo usado em outro notícia. Por favor, escolha um título diferente.'];
+            return ['errorMessage' => 'Este nome já está sendo usado em outro notícia. Por favor, escolha um título diferente.'];
         }
         
         $updated = DB::table('modalidade')
@@ -140,7 +165,8 @@ class ModalidadeController extends Controller
             ->where('id_usuario', $idUsuario)
             ->update([
                 'nm_modalidade' => $validatedData['nome'],
-                'ds_modalidade' => $validatedData['descricao']
+                'ds_modalidade' => $validatedData['descricao'],
+                'id_unidade' => $validatedData['id_unidade'],   
             ]);
  
         if ($updated) {

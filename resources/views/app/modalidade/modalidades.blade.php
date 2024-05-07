@@ -56,10 +56,19 @@
                     <th scope="col" class="px-6 py-3">
                         Descrição
                         <a href="{{ route('app.modalidade.index', ['sort' => 'descricao', 'direction' => 'asc']) }}" class="sort-link">
-                            <span class="sort-arrow sorts asc" data-sort="nome" data-direction="asc">&#8593;</span>
+                            <span class="sort-arrow sorts asc" data-sort="descricao" data-direction="asc">&#8593;</span>
                         </a>
                         <a href="{{ route('app.modalidade.index', ['sort' => 'descricao', 'direction' => 'desc']) }}" class="sort-link">
-                                <span class="sort-arrow sorts desc" data-sort="nome" data-direction="desc">&#8595;</span>
+                                <span class="sort-arrow sorts desc" data-sort="descricao" data-direction="desc">&#8595;</span>
+                        </a> 
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Unidade
+                        <a href="{{ route('app.modalidade.index', ['sort' => 'unidade', 'direction' => 'asc']) }}" class="sort-link">
+                            <span class="sort-arrow sorts asc" data-sort="unidade" data-direction="asc">&#8593;</span>
+                        </a>
+                        <a href="{{ route('app.modalidade.index', ['sort' => 'unidade', 'direction' => 'desc']) }}" class="sort-link">
+                                <span class="sort-arrow sorts desc" data-sort="unidade" data-direction="desc">&#8595;</span>
                         </a> 
                     </th>
                     <th scope="col" class="px-6 py-3">
@@ -81,6 +90,9 @@
                                 </td>
                                 <td class="px-6 py-4 w-auto">
                                     {{ $mod->ds_modalidade }}
+                                </td>
+                                <td class="px-6 py-4 w-auto">
+                                    {{ $mod->nm_unidade }}
                                 </td>
                                 <td class="px-6 py-4 w-auto">
                                     <!-- Modal Editar -->
@@ -123,6 +135,9 @@
                                 </td>
                                 <td class="px-6 py-4 w-auto">
                                     {{ $mod->ds_modalidade }}
+                                </td>
+                                <td class="px-6 py-4 w-auto">
+                                    {{ $mod->nm_unidade }}
                                 </td>
                                 <td class="px-6 py-4 w-auto">
                                     <!-- Modal Editar -->
@@ -193,6 +208,15 @@
                     <input type="text" name="descricao" id="descricao"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                         required>
+                </div>
+                <div>
+                    <label for="unidade"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Unidade</label>
+                        <select id="unidade" name="id_unidade" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
+                            @foreach ($list_unidades as $unidade)
+                                <option value="{{ $unidade->id_unidade }}">{{ $unidade->nm_unidade }}</option>
+                            @endforeach
+                        </select>
                 </div>
                 <!-- Rodapé do Modal -->
                 <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">

@@ -49,7 +49,8 @@ class EventoController extends Controller
     {
         $sortMapping = [
             'nome' => 'e.nm_evento',
-            'data' => 'e.dt_evento',
+            'dataInicio' => 'e.dt_evento_inicio',
+            'dataFim' => 'e.dt_evento_fim',
             'unidade' => 'u.nm_unidade',
             'descricao' => 'e.ds_evento',
         ];
@@ -62,7 +63,7 @@ class EventoController extends Controller
     
         return DB::table('evento as e')
             ->join('unidade as u', 'e.id_unidade', '=', 'u.id_unidade')
-            ->select('e.id_evento', 'e.nm_evento', 'e.ds_evento', 'e.dt_evento', 'u.nm_unidade')            
+            ->select('e.id_evento', 'e.nm_evento', 'e.ds_evento', 'e.dt_evento_inicio', 'e.dt_evento_fim', 'u.nm_unidade')            
             ->where('e.id_usuario', $id)
             ->orderBy($sortAttribute, $direction)
             ->paginate(10);
@@ -72,7 +73,7 @@ class EventoController extends Controller
     {
         $evento = DB::table('evento as e')
             ->join('unidade as u', 'e.id_unidade', '=', 'u.id_unidade')
-            ->select('e.id_evento', 'e.nm_evento', 'e.ds_evento', 'e.dt_evento', 'u.nm_unidade')            
+            ->select('e.id_evento', 'e.nm_evento', 'e.ds_evento', 'e.dt_evento_inicio', 'e.dt_evento_fim', 'u.nm_unidade')            
             ->where('e.id_usuario', $id)
             ->get();
             
@@ -83,11 +84,12 @@ class EventoController extends Controller
     {
         return DB::table('evento as e')
                 ->join('unidade as u', 'e.id_unidade', '=', 'u.id_unidade')
-                ->select('e.id_evento', 'e.nm_evento', 'e.ds_evento', 'e.dt_evento', 'u.nm_unidade')            
+                ->select('e.id_evento', 'e.nm_evento', 'e.ds_evento', 'e.dt_evento_inicio', 'e.dt_evento_fim', 'u.nm_unidade')            
                 ->where('e.id_usuario', $id)
                 ->where('e.nm_evento', 'like', '%' . $key . '%')
                 ->orWhere('e.ds_evento', 'like', '%' . $key . '%')
-                ->orWhere('e.dt_evento', 'like', '%' .$key . '%')
+                ->orWhere('e.dt_evento_inicio', 'like', '%' .$key . '%')
+                ->orWhere('e.dt_evento_fim', 'like', '%' .$key . '%')
                 ->orWhere('u.nm_unidade', 'like', '%' . $key . '%')
                 ->paginate(10);
     }
@@ -116,19 +118,8 @@ class EventoController extends Controller
         $validatedData = $request->validate([
             'nome' => 'required',
             'descricao' => 'required',
-            'data' => [
-                'required',
-                'date_format:Y-m-d',
-                function ($attribute, $value, $fail) {
-                    $date = strtotime($value);
-                    $minDate = strtotime('2000-01-01');
-                    $maxDate = strtotime('2030-12-31');
-    
-                    if ($date < $minDate || $date > $maxDate) {
-                        $fail('A data deve estar entre os anos 2000 e 2030.');
-                    }
-                },
-            ],
+            'dataInicio' => 'required|date',
+            'dataFim' => 'required|date|after_or_equal:dataInicio',
             'id_unidade' => 'required',
         ]);
 
@@ -145,7 +136,8 @@ class EventoController extends Controller
         DB::table('evento')->insert([
             'nm_evento' => $validatedData['nome'],
             'ds_evento' => $validatedData['descricao'],
-            'dt_evento' => $validatedData['data'],
+            'dt_evento_inicio' => $validatedData['dataInicio'],
+            'dt_evento_fim' => $validatedData['dataFim'],
             'id_unidade' => $validatedData['id_unidade'],
             'id_usuario' => $idUsuario
         ]);
@@ -160,19 +152,8 @@ class EventoController extends Controller
         $validatedData = $request->validate([
             'nome' => 'required',
             'descricao' => 'required',
-            'data' => [
-                'required',
-                'date_format:Y-m-d',
-                function ($attribute, $value, $fail) {
-                    $date = strtotime($value);
-                    $minDate = strtotime('2000-01-01');
-                    $maxDate = strtotime('2030-12-31');
-    
-                    if ($date < $minDate || $date > $maxDate) {
-                        $fail('A data deve estar entre os anos 2000 e 2030.');
-                    }
-                },
-            ],
+            'dataInicio' => 'required|date',
+            'dataFim' => 'required|date|after_or_equal:dataInicio',
             'id_unidade' => 'required',
         ]);
 
@@ -183,7 +164,7 @@ class EventoController extends Controller
             ->first();
 
         if ($existingEvent) {
-            return ['errorMessage' => 'Este título já está sendo usado em outro notícia. Por favor, escolha um título diferente.'];
+            return ['errorMessage' => 'Este nome do evento já está sendo usado em outro. Por favor, escolha um título diferente.'];
         }
 
         $updated = DB::table('evento')
@@ -192,7 +173,8 @@ class EventoController extends Controller
             ->update([
                 'nm_evento' => $validatedData['nome'],
                 'ds_evento' => $validatedData['descricao'],
-                'dt_evento' => $validatedData['data'],
+                'dt_evento_inicio' => $validatedData['dataInicio'],
+                'dt_evento_fim' => $validatedData['dataFim'],
                 'id_unidade' => $validatedData['id_unidade'],            
             ]);
 

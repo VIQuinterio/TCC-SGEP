@@ -155,8 +155,14 @@
                             </h5>
                             <h6
                                 class="mb-2 block font-sans text-xl font-semibold leading-snug tracking-normal text-blue-gray-900 antialiased">
-                                {{ \Carbon\Carbon::parse($event->dt_evento)->translatedFormat('j \\d\\e F \\d\\e Y') }}
+                                {{ \Carbon\Carbon::parse($event->dt_evento_inicio)->translatedFormat('j \\d\\e F \\d\\e Y') }}
+                               
                             </h6>
+                            <h6
+                             class="mb-2 block font-sans text-xl font-semibold leading-snug tracking-normal text-blue-gray-900 antialiased">
+                                {{ \Carbon\Carbon::parse($event->dt_evento_fim)->translatedFormat('j \\d\\e F \\d\\e Y') }}
+                           
+                            </h6> 
                             <h6
                                 class="mb-2 block font-sans text-xl font-semibold leading-snug tracking-normal text-blue-gray-900 antialiased">
                                 {{ $event->nm_unidade }}
@@ -168,8 +174,7 @@
         </div>
         <div class="p-25">
             <div id="modalidades" class="flex-1 ml-64 p-2 area">
-                <h1 class="flex items-center text-5xl font-extrabold dark:text-white m-10">Conheça Nossas Opções de
-                    Atividades Esportivas</h1>
+                <h1 class="flex items-center text-5xl font-extrabold dark:text-white m-10">Atividades Esportivas</h1>
             </div>
             <div id="modalidades" class="flex-1 ml-64 p-6 area">
                 @foreach ($list_mod as $mod)
