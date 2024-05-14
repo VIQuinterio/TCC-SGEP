@@ -41,8 +41,8 @@
                 <label for="senha" class="text-small-uppercase">Senha</label>
                 <input class="text-body" id="senha" name="senha" type="password" required>
             </span>            
-            <input class="text-small-uppercase" id="submit" type="submit" value="Entrar">            
-            <a href="recuperarSenha.php" class="link font-montserrat">Não consigo iniciar a sessão</a>
+           <input class="text-small-uppercase" id="submit" type="submit" value="Entrar">            
+            <!--<a href="recuperarSenha.php" class="link font-montserrat">Não consigo iniciar a sessão</a>-->
         </form>
         
     </main>

@@ -157,3 +157,34 @@ legend{
 .text-gray{
   color: var(--text-150);
 }
+
+.grid-unid{
+  display: grid; 
+
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  
+  gap: 0px;
+  height: 100%;
+  
+}
+ 
+.mod-horario {
+  grid-row-start: 1;
+  grid-column-start: 1;
+
+  grid-row-end: 4;
+  grid-column-end: 3; 
+}
+.unid-mapa {
+  grid-row-start: 1;
+  grid-column-start: 3;
+
+  grid-row-end: 4;
+  grid-column-end: 5;
+}
+
+.hora-input{
+  margin: 5px;
+  width: 47%;
+}

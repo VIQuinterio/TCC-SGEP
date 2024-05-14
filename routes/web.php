@@ -104,6 +104,7 @@ Route::group(['prefix' => 'app', 'as' => 'app.'], function () {
         Route::post('excluir/{id}', [UnidadeController::class, 'excluir'])->name('excluir');
     
         Route::get('buscar', [UnidadeController::class, 'buscar'])->name('buscar');
+        Route::post('detalhes/{id}', [UnidadeController::class, 'mostraUnidade'])->name('detalhes');
     });
 
 });

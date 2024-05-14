@@ -16,4 +16,9 @@ class Unidade extends Model
         'ds_endereco',
         'id_usuario',
     ];
+
+    public function modalidades()
+    {
+        return $this->belongsToMany(Modalidade::class, 'unidade_modalidade', 'id_unidade', 'id_modalidade', null, 'id_modalidade');
+    }
 }

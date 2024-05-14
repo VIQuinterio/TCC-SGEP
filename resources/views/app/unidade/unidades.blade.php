@@ -54,7 +54,25 @@
                         </a> 
                     </th>
                     <th scope="col" class="px-6 py-3">
+                        Telefone
+                        <a href="{{ route('app.unidade.index', ['sort' => 'contato', 'direction' => 'asc']) }}" class="sort-link">
+                            <span class="sort-arrow sorts asc" data-sort="contato" data-direction="asc">&#8593;</span>
+                        </a>
+                        <a href="{{ route('app.unidade.index', ['sort' => 'contato', 'direction' => 'desc']) }}" class="sort-link">
+                            <span class="sort-arrow sorts desc" data-sort="contato" data-direction="desc">&#8595;</span>
+                        </a> 
+                    </th>
+                    <th scope="col" class="px-6 py-3">
                         Endereço
+                        <a href="{{ route('app.unidade.index', ['sort' => 'endereco', 'direction' => 'asc']) }}" class="sort-link">
+                            <span class="sort-arrow sorts asc" data-sort="endereco" data-direction="asc">&#8593;</span>
+                        </a>
+                        <a href="{{ route('app.unidade.index', ['sort' => 'endereco', 'direction' => 'desc']) }}" class="sort-link">
+                            <span class="sort-arrow sorts desc" data-sort="endereco" data-direction="desc">&#8595;</span>
+                        </a> 
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Modalidade
                         <a href="{{ route('app.unidade.index', ['sort' => 'endereco', 'direction' => 'asc']) }}" class="sort-link">
                             <span class="sort-arrow sorts asc" data-sort="endereco" data-direction="asc">&#8593;</span>
                         </a>
@@ -78,6 +96,9 @@
                                 </th>
                                 <td class="px-6 py-4 w-auto">
                                     {{ $unid->nm_unidade }}
+                                </td>
+                                <td class="px-6 py-4 w-auto">
+                                    {{ $unid->ds_contato }}
                                 </td>
                                 <td class="px-6 py-4 w-auto">
                                     {{ $unid->ds_endereco }}
@@ -106,6 +127,21 @@
                                                         d="M19 4h-3.5l-1-1h-5l-1 1H5v2h14M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6z" />
                                                 </svg></button>
                                         </form>
+
+                                        <form action="{{ route('app.unidade.detalhes', ['id' => $unid->id_unidade]) }}" method="POST">
+                                            @csrf
+                                            <input type="hidden" name="unid_id" value="{{ $unid->id_unidade }}">
+
+                                            <button type="submit"
+                                                class="font-medium text-red-600 dark:text-red-500 hover:underline"
+                                                type="button">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24">
+                                                    <path fill="#41af53"
+                                                        d="M12 9a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5a5 5 0 0 1 5-5a5 5 0 0 1 5 5a5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5" />
+                                                </svg>
+                                            </button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>
@@ -122,8 +158,17 @@
                                     {{ $unid->nm_unidade }}
                                 </td>
                                 <td class="px-6 py-4 w-auto">
+                                    {{ $unid->ds_contato }}
+                                </td>
+                                <td class="px-6 py-4 w-auto">
                                     {{ $unid->ds_endereco }}
                                 </td>
+                                <td class="px-6 py-4 w-auto">
+                                    @foreach ($unid->modalidades as $modalidade)
+                                    {{ $modalidade->nm_modalidade }}
+                                @endforeach
+                                </td>
+
                                 <td class="px-6 py-4 w-auto">
                                     <!-- Modal Editar -->
                                     <div class="flex items-center">                                                                                
@@ -141,6 +186,21 @@
                                             <button type="submit" class="font-medium text-red-600 dark:text-red-500 hover:underline" type="button">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                                                         <path fill="#DC262E" d="M19 4h-3.5l-1-1h-5l-1 1H5v2h14M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6z" />
+                                                </svg>
+                                            </button>
+                                        </form>
+
+                                        <form action="{{ route('app.unidade.detalhes', ['id' => $unid->id_unidade]) }}" method="POST">
+                                            @csrf
+                                            <input type="hidden" name="unid_id" value="{{ $unid->id_unidade }}">
+
+                                            <button type="submit"
+                                                class="font-medium text-red-600 dark:text-red-500 hover:underline"
+                                                type="button">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24">
+                                                    <path fill="#41af53"
+                                                        d="M12 9a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5a5 5 0 0 1 5-5a5 5 0 0 1 5 5a5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5" />
                                                 </svg>
                                             </button>
                                         </form>
@@ -194,6 +254,31 @@
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                         required>
                 </div>
+                <div>
+                    <label for="contato"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Telefone</label>
+                    <input type="tel" name="contato" id="contato"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                        required>
+                </div>
+                <div>
+                    <p>Selecione as modalidades e insira o horário de aula para cada uma:</p>
+                    @foreach ($list_modalidades as $modalidade)
+                        <div class="flex items-center me-4">
+                            <input id="modalidade_{{ $modalidade->id_modalidade }}" type="checkbox" name="modalidades[]" value="{{ $modalidade->id_modalidade }}" 
+                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 
+                            dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 checkbox-trigger">
+                            <label for="modalidade_{{ $modalidade->id_modalidade }}" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ $modalidade->nm_modalidade }}</label>
+                            <!-- Campo de entrada para o horário de aula (inicialmente oculto) -->
+                            <input type="text" name="horario_{{ $modalidade->id_modalidade }}" placeholder="Horário de aula" 
+                            class="w-32 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
+                            focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-600 dark:border-gray-500 
+                            dark:placeholder-gray-400 dark:text-white hidden hora-input">
+                        </div>
+                    @endforeach
+
+                </div>
+
                 <!-- Rodapé do Modal -->
                 <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
                     <button type="submit"
@@ -213,6 +298,21 @@
                     }
                 });
             });
+
+            document.addEventListener('click', function(event) {
+                var checkboxes = document.querySelectorAll('.checkbox-trigger');
+                checkboxes.forEach(function(checkbox) {
+                    if (event.target.id === checkbox.id || event.target.htmlFor === checkbox.id) {
+                        var horarioInput = checkbox.nextElementSibling.nextElementSibling;
+                        if (checkbox.checked) {
+                            horarioInput.classList.remove('hidden');
+                        } else {
+                            horarioInput.classList.add('hidden');
+                        }
+                    }
+                });
+            });
+
         </script>
         <script src="{{asset('js/modal.js')}}"></script>
 

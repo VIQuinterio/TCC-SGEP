@@ -149,7 +149,7 @@
                                         <form action="{{ route('app.noticia.excluir', ['id' => $news->id_noticia]) }}"
                                             method="POST">
                                             @csrf
-                                            <input type="hidden" name="event_id" value="{{ $news->id_noticia }}">
+                                            <input type="hidden" name="news_id" value="{{ $news->id_noticia }}">
 
                                             <button type="submit"
                                                 class="font-medium text-red-600 dark:text-red-500 hover:underline"
@@ -158,6 +158,20 @@
                                                     <path fill="#DC262E"
                                                         d="M19 4h-3.5l-1-1h-5l-1 1H5v2h14M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6z" />
                                                 </svg></button>
+                                        </form>
+                                        <form action="{{ route('app.noticia.detalhes', ['id' => $news->id_noticia]) }}" method="POST">
+                                            @csrf
+                                            <input type="hidden" name="news_id" value="{{ $news->id_noticia }}">
+
+                                            <button type="submit"
+                                                class="font-medium text-red-600 dark:text-red-500 hover:underline"
+                                                type="button">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24">
+                                                    <path fill="#41af53"
+                                                        d="M12 9a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5a5 5 0 0 1 5-5a5 5 0 0 1 5 5a5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5" />
+                                                </svg>
+                                            </button>
                                         </form>
                                     </div>
                                 </td>
@@ -305,7 +319,7 @@
 
                             <div class="col-span-2 sm:col-span-1">
                                 <label for="data" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Data</label>
-                                <input type="datetime-local" name="data" id="data" value="{{ \Carbon\Carbon::now()->timezone('America/Sao_Paulo')->format('Y-m-d\TH:i') }}"
+                                <input type="date" name="data" id="data" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                                     required disabled>
                             </div>                         

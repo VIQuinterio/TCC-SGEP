@@ -36,7 +36,7 @@
                         <div class="col-span-2 sm:col-span-1">
                             <label for="data"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Data</label>
-                            <input type="datetime-local" name="data" id="data" value="{{$news->dt_noticia}}"
+                            <input type="date" name="data" id="data" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                             required disabled>
                         </div>

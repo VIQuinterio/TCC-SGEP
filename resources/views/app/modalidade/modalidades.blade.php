@@ -61,7 +61,7 @@
                         <a href="{{ route('app.modalidade.index', ['sort' => 'descricao', 'direction' => 'desc']) }}" class="sort-link">
                                 <span class="sort-arrow sorts desc" data-sort="descricao" data-direction="desc">&#8595;</span>
                         </a> 
-                    </th>
+                    </th><!--
                     <th scope="col" class="px-6 py-3">
                         Unidade
                         <a href="{{ route('app.modalidade.index', ['sort' => 'unidade', 'direction' => 'asc']) }}" class="sort-link">
@@ -70,7 +70,7 @@
                         <a href="{{ route('app.modalidade.index', ['sort' => 'unidade', 'direction' => 'desc']) }}" class="sort-link">
                                 <span class="sort-arrow sorts desc" data-sort="unidade" data-direction="desc">&#8595;</span>
                         </a> 
-                    </th>
+                    </th>-->
                     <th scope="col" class="px-6 py-3">
                         Ação
                     </th>
@@ -91,9 +91,9 @@
                                 <td class="px-6 py-4 w-auto">
                                     {{ $mod->ds_modalidade }}
                                 </td>
-                                <td class="px-6 py-4 w-auto">
-                                    {{ $mod->nm_unidade }}
-                                </td>
+                                <!--<td class="px-6 py-4 w-auto">
+                                    { $mod->nm_unidade }}
+                                </td>-->
                                 <td class="px-6 py-4 w-auto">
                                     <!-- Modal Editar -->
                                     <div class="flex items-center">
@@ -136,9 +136,9 @@
                                 <td class="px-6 py-4 w-auto">
                                     {{ $mod->ds_modalidade }}
                                 </td>
-                                <td class="px-6 py-4 w-auto">
-                                    {{ $mod->nm_unidade }}
-                                </td>
+                                <!--<td class="px-6 py-4 w-auto">
+                                    { $mod->nm_unidade }}
+                                </td>-->
                                 <td class="px-6 py-4 w-auto">
                                     <!-- Modal Editar -->
                                     <div class="flex items-center">                                                                                
@@ -209,16 +209,16 @@
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                         required>
                 </div>
-                <div>
+                <!--<div>
                     <label for="unidade"
                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Unidade</label>
                         <select id="unidade" name="id_unidade" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
-                            @foreach ($list_unidades as $unidade)
-                                <option value="{{ $unidade->id_unidade }}">{{ $unidade->nm_unidade }}</option>
-                            @endforeach
+                            foreach ($list_unidades as $unidade)
+                                <option value="{ $unidade->id_unidade }}">{ $unidade->nm_unidade }}</option>
+                            endforeach
                         </select>
                 </div>
-                <!-- Rodapé do Modal -->
+                 Rodapé do Modal -->
                 <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
                     <button type="submit"
                         class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Adicionar</button>
@@ -240,7 +240,7 @@
         </script>
         <script src="{{asset('js/modal.js')}}"></script>
 
-        
+        <script src="{{asset('js/form.js')}}"></script>
 </body>
 
 </html>
