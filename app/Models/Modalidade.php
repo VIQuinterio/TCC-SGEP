@@ -15,4 +15,16 @@ class Modalidade extends Model
         'ds_modalidade',
         'id_usuario',
     ];
+
+    public function unidades()
+    {
+        return $this->belongsToMany(
+            Unidade::class, 
+            'unidade_modalidade', 
+            'id_modalidade', 
+            'id_unidade', 
+            'id_modalidade', 
+            'id_unidade'
+        )->withPivot('ds_horario');
+    }
 }

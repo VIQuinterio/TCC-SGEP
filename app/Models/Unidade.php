@@ -19,6 +19,13 @@ class Unidade extends Model
 
     public function modalidades()
     {
-        return $this->belongsToMany(Modalidade::class, 'unidade_modalidade', 'id_unidade', 'id_modalidade', null, 'id_modalidade');
+        return $this->belongsToMany(
+            Modalidade::class, 
+            'unidade_modalidade', 
+            'id_unidade', 
+            'id_modalidade', 
+            'id_unidade', 
+            'id_modalidade'
+        )->withPivot('ds_horario');
     }
 }

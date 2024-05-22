@@ -163,10 +163,14 @@
                                 <td class="px-6 py-4 w-auto">
                                     {{ $unid->ds_endereco }}
                                 </td>
-                                <td class="px-6 py-4 w-auto">
+                                <td class="px-6 py-4 w-auto"> 
+                                    @if ($unid->modalidades->isNotEmpty())
                                     @foreach ($unid->modalidades as $modalidade)
-                                    {{ $modalidade->nm_modalidade }}
-                                @endforeach
+                                        {{ $modalidade->nm_modalidade }},
+                                    @endforeach
+                                    @else
+                                        Nenhuma modalidade associada
+                                    @endif
                                 </td>
 
                                 <td class="px-6 py-4 w-auto">
@@ -270,6 +274,10 @@
                             dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 checkbox-trigger">
                             <label for="modalidade_{{ $modalidade->id_modalidade }}" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ $modalidade->nm_modalidade }}</label>
                             <!-- Campo de entrada para o horário de aula (inicialmente oculto) -->
+                            <input type="text" name="horario_{{ $modalidade->id_modalidade }}" placeholder="Horário de aula" 
+                            class="w-32 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
+                            focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-600 dark:border-gray-500 
+                            dark:placeholder-gray-400 dark:text-white hidden hora-input">
                             <input type="text" name="horario_{{ $modalidade->id_modalidade }}" placeholder="Horário de aula" 
                             class="w-32 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
                             focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-600 dark:border-gray-500 
