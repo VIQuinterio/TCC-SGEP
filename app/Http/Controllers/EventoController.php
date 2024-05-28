@@ -66,6 +66,7 @@ class EventoController extends Controller
             ->select('e.id_evento', 'e.nm_evento', 'e.ds_evento', 'e.dt_evento_inicio', 'e.dt_evento_fim', 'u.nm_unidade')            
             ->where('e.id_usuario', $id)
             ->orderBy($sortAttribute, $direction)
+           
             ->paginate(10);
     }
     
@@ -139,7 +140,8 @@ class EventoController extends Controller
             'dt_evento_inicio' => $validatedData['dataInicio'],
             'dt_evento_fim' => $validatedData['dataFim'],
             'id_unidade' => $validatedData['id_unidade'],
-            'id_usuario' => $idUsuario
+            'id_usuario' => $idUsuario,
+            'created_at' => now()
         ]);
 
         return redirect()->back()->with('success', 'evento cadastrada com sucesso.');
@@ -175,7 +177,8 @@ class EventoController extends Controller
                 'ds_evento' => $validatedData['descricao'],
                 'dt_evento_inicio' => $validatedData['dataInicio'],
                 'dt_evento_fim' => $validatedData['dataFim'],
-                'id_unidade' => $validatedData['id_unidade'],            
+                'id_unidade' => $validatedData['id_unidade'],  
+                'updated_at' => now()          
             ]);
 
         if ($updated) {

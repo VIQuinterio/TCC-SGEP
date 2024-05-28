@@ -27,11 +27,12 @@ class UnidadeController extends Controller
                 
                 $unid_data = $this->procurar_unid_por_id($user_unidade);
             
-                $list_unid = $this->listarUnidadeUsuario($user_unidade);
+                $list_unid = $this->listarUnidadeUsuario($user_id);
 
                 $list_modalidades = $this->listarModalidadeUsuario($user_id);
-                
-                return view('app.unidade.unidades', compact('user_data', 'unid_data', 'list_unid', 'list_modalidades'));
+            
+            return view('app.unidade.unidades', compact('user_data', 'unid_data', 'list_unid', 'list_modalidades'));
+
             } else {                
                 return redirect()->route('login')->with('error', 'Você não tem uma unidade associada.');
             }
@@ -57,11 +58,12 @@ class UnidadeController extends Controller
     
         $sortAttribute = $sortMapping[$sortKey] ?? $sortKey;
     
-        $direction = request()->input('direction', 'asc');
+        $direction = request()->input('direction', 'desc');
     
         return Unidade::with('modalidades')
             ->where('id_usuario', $id)
             ->orderBy($sortAttribute, $direction)
+            ->orderByRaw('GREATEST(created_at, updated_at) ' . $direction) // o greatest compara as variaveis para obter a data mais recente entre elas
             ->paginate(10);
     }
 
@@ -71,19 +73,17 @@ class UnidadeController extends Controller
             ->get();
         return $unidade;
     }
-
+    
     public function buscarUnidade($key, $id)
-    {
-        $unid = DB::table('unidade')
-            ->where('id_usuario', $id)
-            ->where(function ($query) use ($key) {
-                $query->where('nm_unidade', 'like', "%$key%")
-                    ->orWhere('ds_endereco', 'like', "%$key%")
-                    ->orWhere('ds_contato', 'like', "%$key%");
-            })            
-            ->paginate(10); 
-
-        return $unid;
+    { 
+        return Unidade::with('modalidades')
+        ->where('id_usuario', $id)
+        ->where(function ($query) use ($key) {
+            $query->where('nm_unidade', 'like', '%' . $key . '%')
+                ->orWhere('ds_endereco', 'like', '%' . $key . '%')
+                ->orWhere('ds_contato', 'like', '%' . $key . '%');
+        })
+        ->paginate(10); 
     }
     
     public function buscar(Request $request)
@@ -98,56 +98,12 @@ class UnidadeController extends Controller
         $user_data = $this->procurar_user_por_id($user_unidade);
         $unid_data = $this->procurar_unid_por_id($user_unidade);
         $list_unid = $this->listarUnidadeUsuario($user_unidade);
+        $list_modalidades = $this->listarModalidadeUsuario($idUsuario);
 
-        return view('app.unidade.unidades', compact('resultados_busca', 'user_data', 'unid_data', 'list_unid'));
+        return view('app.unidade.unidades', compact('resultados_busca', 'user_data', 'unid_data', 'list_unid', 'list_modalidades'));
     }
 
     public function cadastro(Request $request)
-    {
-        $idUsuario = Auth::id();
-
-    $validatedData = $request->validate([
-        'nome' => 'required',
-        'endereco' => 'required',
-        'contato' => 'required',
-        'modalidades' => 'required|array',
-    ]);
-
-    $check_name = DB::table('unidade')
-        ->where('nm_unidade', $validatedData['nome'])
-        ->where('ds_contato', $validatedData['contato'])
-        ->where('id_usuario', $idUsuario)
-        ->count();
-
-    if ($check_name > 0) {
-        return ['errorMessage' => 'Este nome já está registrado. Tente outro.'];
-    }
-
-    // Cria a unidade esportiva
-    /*O insertGetId() é usado para inserir a nova unidade esportiva e retornar seu ID. 
-    Em seguida, para cada ID de modalidade no array modalidades, um novo registro é 
-    inserido na tabela unidade_modalidade com o ID da unidade esportiva, 
-    o ID da modalidade e o horário da aula*/
-    $unidade = DB::table('unidade')->insertGetId([
-        'nm_unidade' => $validatedData['nome'],
-        'ds_endereco' => $validatedData['endereco'],
-        'ds_contato' => $validatedData['contato'],
-        'id_usuario' => $idUsuario
-    ]);
-
-    // Associa as modalidades à unidade esportiva
-    foreach ($validatedData['modalidades'] as $modalidade) {
-        DB::table('unidade_modalidade')->insert([
-            'id_unidade' => $unidade,
-            'id_modalidade' => $modalidade,
-            'ds_horario' => $request->input('horario_'.$modalidade),
-        ]);
-    }
-
-        return redirect()->back()->with('success', 'unidade cadastrada com sucesso.');
-    }
-
-    public function atualizar(Request $request)
     {
         $idUsuario = Auth::id();
 
@@ -158,51 +114,164 @@ class UnidadeController extends Controller
             'modalidades' => 'required|array',
         ]);
 
-        $existingUnid = DB::table('unidade')
-            ->where('id_usuario', $idUsuario)
+        // Verificar se o nome já está registrado
+        $checkName = DB::table('unidade')
             ->where('nm_unidade', $validatedData['nome'])
-            ->where('ds_contato', $validatedData['contato'])
-            ->where('id_unidade', '<>', $request->input('id'))
-            ->first();
+            ->where('id_usuario', $idUsuario)
+            ->count();
 
-        if ($existingUnid) {
-            return ['errorMessage' => 'Este título já está sendo usado em outra unidade. Por favor, escolha um título diferente.'];
+        if ($checkName > 0) {
+            return redirect()->back()->with('errorMessage', 'Este nome já está registrado. Tente outro.');
         }
 
-        $updated = DB::table('unidade')
-            ->where('id_unidade', $request->input('id'))
+        // Verificar se o endereço já está registrado
+        $checkEndereco = DB::table('unidade')
+            ->where('ds_endereco', $validatedData['endereco'])
             ->where('id_usuario', $idUsuario)
-            ->update([
-                'nm_unidade' => $validatedData['nome'],
-                'ds_endereco' => $validatedData['endereco'],
-                'ds_contato' => $validatedData['contato'],
+            ->count();
+
+        if ($checkEndereco > 0) {
+            return redirect()->back()->with('errorMessage', 'Este endereço já está registrado. Tente outro.');
+        }
+
+        // Verificar se o contato já está registrado
+        $checkContato = DB::table('unidade')
+            ->where('ds_contato', $validatedData['contato'])
+            ->where('id_usuario', $idUsuario)
+            ->count();
+
+        if ($checkContato > 0) {
+            return redirect()->back()->with('errorMessage', 'Este contato já está registrado. Tente outro.');
+        }
+
+        // Cria a unidade esportiva
+        /*O insertGetId() é usado para inserir a nova unidade esportiva e retornar seu ID. 
+        Em seguida, para cada ID de modalidade no array modalidades, um novo registro é 
+        inserido na tabela unidade_modalidade com o ID da unidade esportiva, 
+        o ID da modalidade e o horário da aula*/
+        $unidade = DB::table('unidade')->insertGetId([
+            'nm_unidade' => $validatedData['nome'],
+            'ds_endereco' => $validatedData['endereco'],
+            'ds_contato' => $validatedData['contato'],
+            'id_usuario' => $idUsuario,
+            'created_at' => now()
+        ]);
+
+        // Associa as modalidades à unidade esportiva
+        /*foreach ($validatedData['modalidades'] as $modalidade) {
+            DB::table('unidade_modalidade')->insert([
+                'id_unidade' => $unidade,
+                'id_modalidade' => $modalidade,
+                'ds_horario' => $request->input('horario_'.$modalidade),
+                'ds_dia_semana' => $request->input('dia_semana_'.$modalidade),
             ]);
+        }*/
 
-        if ($updated) {
-            // Remove todas as associações existentes entre a unidade e as modalidades
-            DB::table('unidade_modalidade')->where('id_unidade', $request->input('id'))->delete();
-
-            // Reinsere as associações atualizadas entre a unidade e as modalidades
-            foreach ($validatedData['modalidades'] as $modalidade) {
+        foreach ($validatedData['modalidades'] as $modalidadeId) {
+            $dias_semana = $request->input('dia_semana_' . $modalidadeId, []);
+            foreach ($dias_semana as $dia) {
+                $horario = $request->input('horario_' . $modalidadeId . '_' . $dia);
                 DB::table('unidade_modalidade')->insert([
-                    'id_unidade' => $request->input('id'),
-                    'id_modalidade' => $modalidade,
-                    'ds_horario' => $request->input('horario_'.$modalidade),
+                    'id_unidade' => $unidade,
+                    'id_modalidade' => $modalidadeId,
+                    'ds_dia_semana' => $dia,
+                    'ds_horario' => $horario,
                 ]);
             }
-
-            return redirect()->route("app.unidade.index");
-            /*return ['successMessage' => 'Informações da unidade atualizadas com sucesso'];*/
-        } else {
-            return ['errorMessage' => 'unidade não encontrada'];
         }
+
+        return redirect()->back()->with('success', 'unidade cadastrada com sucesso.');
+    }
+
+    public function atualizar(Request $request)
+    {
+        $validatedData = $request->validate([
+            'nome' => 'required|string',
+            'endereco' => 'required|string',
+            'contato' => 'required|string',
+            'modalidades' => 'required|array',
+        ]);
+    
+        $idUsuario = Auth::id();
+
+        // Verifica se os campos nome, endereço e contato foram alterados
+        $unidade = DB::table('unidade')
+            ->where('id_unidade', $request->input('id'))
+            ->where('id_usuario', $idUsuario)
+            ->first();
+
+        $camposAlterados = false;
+
+        if ($unidade) {
+            if ($unidade->nm_unidade != $validatedData['nome'] ||
+                $unidade->ds_endereco != $validatedData['endereco'] ||
+                $unidade->ds_contato != $validatedData['contato']) {
+                $camposAlterados = true;
+            }
+        } else {
+            return ['errorMessage' => 'Unidade não encontrada'];
+        }
+
+        // Atualiza a unidade apenas se os campos nome, endereço ou contato foram alterados
+        if ($camposAlterados) {
+            $updated = DB::table('unidade')
+                ->where('id_unidade', $request->input('id'))
+                ->where('id_usuario', $idUsuario)
+                ->update([
+                    'nm_unidade' => $validatedData['nome'],
+                    'ds_endereco' => $validatedData['endereco'],
+                    'ds_contato' => $validatedData['contato'],
+                    'updated_at' => now()
+                ]);
+
+            if (!$updated) {
+                return ['errorMessage' => 'Erro ao atualizar informações da unidade'];
+            }
+        }
+
+        // Atualiza as modalidades
+        foreach ($validatedData['modalidades'] as $modalidadeId) {
+            $dias_semana = $request->input('edit_dia_semana_' . $modalidadeId, []);
+            foreach ($dias_semana as $dia) {
+                $horario = $request->input('edit_horario_' . $modalidadeId . '_' . $dia);
+
+                // Verifica se a associação já existe
+                $exists = DB::table('unidade_modalidade')
+                    ->where('id_unidade', $request->input('id'))
+                    ->where('id_modalidade', $modalidadeId)
+                    ->where('ds_dia_semana', $dia)
+                    ->exists();
+
+                if ($exists) {
+                    // Atualiza a associação existente
+                    DB::table('unidade_modalidade')
+                        ->where('id_unidade',$request->input('id'))
+                        ->where('id_modalidade', $modalidadeId)
+                        ->where('ds_dia_semana', $dia)
+                        ->update([
+                            'ds_horario' => $horario,
+                        ]);
+                } else {
+                    // Insere uma nova associação
+                    DB::table('unidade_modalidade')->insert([
+                        'id_unidade' => $request->input('id'),
+                        'id_modalidade' => $modalidadeId,
+                        'ds_dia_semana' => $dia,
+                        'ds_horario' => $horario,
+                    ]);
+                }
+            }
+        }
+        return redirect()->route("app.unidade.index");
+        
     }
     
     public function excluir($id)
     {
+        $deletedAssociation = DB::table('unidade_modalidade')->where('id_unidade', $id)->delete();
         $deleted = DB::table('unidade')->where('id_unidade', $id)->delete();
 
-        if ($deleted) {
+        if ($deletedAssociation &&  $deleted) {
             return redirect()->route("app.unidade.index");
             //return ['successMessage' => 'unidade excluída com sucesso'];
         } else {
@@ -220,8 +289,8 @@ class UnidadeController extends Controller
     {
         $id = $request->input('unid_id');
         $unid = Unidade::findOrFail($id);
-        
-        return view('app.unidade.editar', compact('unid'));
+        $mod_list = Modalidade::all(); 
+        return view('app.unidade.editar', compact('unid', 'mod_list'));
     }
 
     public function mostraUnidade($id)
@@ -238,10 +307,13 @@ class UnidadeController extends Controller
                 $modalidades = DB::table('unidade_modalidade')
                     ->where('unidade_modalidade.id_unidade', $id)
                     ->join('modalidade', 'unidade_modalidade.id_modalidade', '=', 'modalidade.id_modalidade')
-                    ->select('modalidade.*', 'unidade_modalidade.ds_horario')
+                    ->select('modalidade.*', 'unidade_modalidade.ds_horario', 'unidade_modalidade.ds_dia_semana')
                     ->get();
-    
-                return view('app.unidade.show', compact('user_data', 'unid_data', 'modalidades'));  
+                $groupedModalidades = [];
+                foreach ($modalidades as $modalidade) {
+                    $groupedModalidades[$modalidade->nm_modalidade][] = $modalidade;
+                }
+                return view('app.unidade.show', compact('user_data', 'unid_data', 'modalidades', 'groupedModalidades'));  
             }
         }        
     }

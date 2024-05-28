@@ -73,12 +73,6 @@
                     </th>
                     <th scope="col" class="px-6 py-3">
                         Modalidade
-                        <a href="{{ route('app.unidade.index', ['sort' => 'endereco', 'direction' => 'asc']) }}" class="sort-link">
-                            <span class="sort-arrow sorts asc" data-sort="endereco" data-direction="asc">&#8593;</span>
-                        </a>
-                        <a href="{{ route('app.unidade.index', ['sort' => 'endereco', 'direction' => 'desc']) }}" class="sort-link">
-                            <span class="sort-arrow sorts desc" data-sort="endereco" data-direction="desc">&#8595;</span>
-                        </a> 
                     </th>
                     <th scope="col" class="px-6 py-3">
                         Ação
@@ -88,8 +82,7 @@
                 <tbody>
                     @if (isset($resultados_busca) && count($resultados_busca) > 0)
                         @foreach ($resultados_busca as $unid)
-                            <tr
-                                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                 <th scope="row"
                                     class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white w-auto">
                                     {{ $loop->index + 1 }}
@@ -98,10 +91,27 @@
                                     {{ $unid->nm_unidade }}
                                 </td>
                                 <td class="px-6 py-4 w-auto">
-                                    {{ $unid->ds_contato }}
+                                    {{ $unid->ds_endereco }}
                                 </td>
                                 <td class="px-6 py-4 w-auto">
-                                    {{ $unid->ds_endereco }}
+                                    {{ $unid->ds_contato }}
+                                </td>
+                                <td class="px-6 py-4 w-auto"> 
+                                    @if ($unid->modalidades->isNotEmpty())
+                                    @php
+                                        $modalidadesExibidas = collect();
+                                    @endphp
+                                    @foreach ($unid->modalidades as $modalidade)
+                                        @if (!$modalidadesExibidas->contains($modalidade->nm_modalidade))
+                                            {{ $modalidade->nm_modalidade }},
+                                            @php
+                                                $modalidadesExibidas->push($modalidade->nm_modalidade);
+                                            @endphp
+                                        @endif
+                                    @endforeach
+                                @else
+                                    Nenhuma modalidade associada
+                                @endif
                                 </td>
                                 <td class="px-6 py-4 w-auto">
                                     <!-- Modal Editar -->
@@ -165,9 +175,17 @@
                                 </td>
                                 <td class="px-6 py-4 w-auto"> 
                                     @if ($unid->modalidades->isNotEmpty())
-                                    @foreach ($unid->modalidades as $modalidade)
-                                        {{ $modalidade->nm_modalidade }},
-                                    @endforeach
+                                        @php
+                                            $modalidadesExibidas = collect();
+                                        @endphp
+                                        @foreach ($unid->modalidades as $modalidade)
+                                            @if (!$modalidadesExibidas->contains($modalidade->nm_modalidade))
+                                                {{ $modalidade->nm_modalidade }},
+                                                @php
+                                                    $modalidadesExibidas->push($modalidade->nm_modalidade);
+                                                @endphp
+                                            @endif
+                                        @endforeach
                                     @else
                                         Nenhuma modalidade associada
                                     @endif
@@ -237,8 +255,6 @@
         @endforeach
     @endif
 
-
-
     <!-- Main modal -->
     @extends('layouts.modal')
     @section('titulo', 'Cadastrar Unidade')
@@ -252,41 +268,43 @@
                         required>
                 </div>
                 <div>
-                    <label for="endereco"
-                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Endereço</label>
+                    <label for="endereco" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Endereço</label>
                     <input type="text" name="endereco" id="endereco"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                         required>
                 </div>
                 <div>
-                    <label for="contato"
-                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Telefone</label>
+                    <label for="contato" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Telefone</label>
                     <input type="tel" name="contato" id="contato"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                         required>
                 </div>
                 <div>
-                    <p>Selecione as modalidades e insira o horário de aula para cada uma:</p>
+                    <p class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Selecione as modalidades e insira o horário de aula para cada uma:</p>
                     @foreach ($list_modalidades as $modalidade)
-                        <div class="flex items-center me-4">
+                        <div class="mb-4">
                             <input id="modalidade_{{ $modalidade->id_modalidade }}" type="checkbox" name="modalidades[]" value="{{ $modalidade->id_modalidade }}" 
-                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 
-                            dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 checkbox-trigger">
+                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 
+                                dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 checkbox-trigger">
                             <label for="modalidade_{{ $modalidade->id_modalidade }}" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ $modalidade->nm_modalidade }}</label>
-                            <!-- Campo de entrada para o horário de aula (inicialmente oculto) -->
-                            <input type="text" name="horario_{{ $modalidade->id_modalidade }}" placeholder="Horário de aula" 
-                            class="w-32 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
-                            focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-600 dark:border-gray-500 
-                            dark:placeholder-gray-400 dark:text-white hidden hora-input">
-                            <input type="text" name="horario_{{ $modalidade->id_modalidade }}" placeholder="Horário de aula" 
-                            class="w-32 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
-                            focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-600 dark:border-gray-500 
-                            dark:placeholder-gray-400 dark:text-white hidden hora-input">
+                        
+                            <div class="ml-6 mt-2 hidden horario-dia-container" id="horarios_{{ $modalidade->id_modalidade }}">
+                                @foreach(['Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'] as $dia)
+                                    <div class="flex items-center mb-2">
+                                        <input type="checkbox" id="dia_semana_{{ $modalidade->id_modalidade }}_{{ $dia }}" name="dia_semana_{{ $modalidade->id_modalidade }}[]" value="{{ $dia }}"
+                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 
+                                        dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 dia-trigger" data-target="horario_{{ $modalidade->id_modalidade }}_{{ $dia }}">
+                                        <label for="dia_semana_{{ $modalidade->id_modalidade }}_{{ $dia }}" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ $dia }}</label>
+                                        <input type="text" id="horario_{{ $modalidade->id_modalidade }}_{{ $dia }}" name="horario_{{ $modalidade->id_modalidade }}_{{ $dia }}" placeholder="Horário de aula" 
+                                        class="w-32 ml-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
+                                        focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-600 dark:border-gray-500 
+                                        dark:placeholder-gray-400 dark:text-white hidden">
+                                    </div>
+                                @endforeach
+                            </div>
                         </div>
                     @endforeach
-
                 </div>
-
                 <!-- Rodapé do Modal -->
                 <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
                     <button type="submit"
@@ -307,24 +325,51 @@
                 });
             });
 
-            document.addEventListener('click', function(event) {
-                var checkboxes = document.querySelectorAll('.checkbox-trigger');
-                checkboxes.forEach(function(checkbox) {
-                    if (event.target.id === checkbox.id || event.target.htmlFor === checkbox.id) {
-                        var horarioInput = checkbox.nextElementSibling.nextElementSibling;
-                        if (checkbox.checked) {
-                            horarioInput.classList.remove('hidden');
-                        } else {
-                            horarioInput.classList.add('hidden');
+            document.addEventListener('DOMContentLoaded', function() {
+                document.querySelectorAll('.checkbox-trigger').forEach(function(checkbox) {
+                    checkbox.addEventListener('change', function() {
+                        var modalidadeId = this.id.split('_')[1];
+                        var targetId = 'horarios_' + modalidadeId;
+                        var horarioContainer = document.getElementById(targetId);
+                        if (horarioContainer) {  // Verifique se o elemento existe
+                            if (this.checked) {
+                                horarioContainer.classList.remove('hidden');
+                            } else {
+                                horarioContainer.classList.add('hidden');
+                                horarioContainer.querySelectorAll('.dia-trigger').forEach(function(diaCheckbox) {
+                                    diaCheckbox.checked = false;
+                                    var horarioInput = document.getElementById(diaCheckbox.dataset.target);
+                                    if (horarioInput) {  // Verifique se o elemento existe
+                                        horarioInput.classList.add('hidden');
+                                        horarioInput.value = '';
+                                    }
+                                });
+                            }
                         }
-                    }
+                    });
                 });
-            });
 
+                document.querySelectorAll('.dia-trigger').forEach(function(diaCheckbox) {
+                    diaCheckbox.addEventListener('change', function() {
+                        var horarioInput = document.getElementById(this.dataset.target);
+                        
+                        if (horarioInput) {  // Verifique se o elemento existe
+                            if (this.checked) {
+                                horarioInput.classList.remove('hidden');
+                            } else {
+                                horarioInput.classList.add('hidden');
+                                horarioInput.value = '';
+                            }
+                        }
+                    });
+                });
+
+                
+            });
+            
         </script>
         <script src="{{asset('js/modal.js')}}"></script>
-
-        
+      
 </body>
 
 </html>

@@ -52,7 +52,6 @@ class NoticiaController extends Controller
         $sortMapping = [
             'titulo' => 'nm_titulo',
             'data' => 'dt_noticia',
-            // Adicione outros mapeamentos conforme necessário
         ];
     
         // Obtenha o parâmetro de ordenação da solicitação
@@ -66,6 +65,7 @@ class NoticiaController extends Controller
     
         return Noticia::where('id_usuario', $id)
             ->orderBy($sortAttribute, $direction)
+            ->orderByRaw('GREATEST(created_at, updated_at) ' . $direction)
             ->paginate(10);
     }
     
@@ -118,6 +118,7 @@ class NoticiaController extends Controller
                 'ds_conteudo' => $validatedData['conteudo'],
                 'im_capa' => $imagemPath, 
                 'dt_noticia' => now(),
+                'created_at' => now(),
                 'id_usuario' => $idUsuario
             ]);
 
@@ -133,19 +134,6 @@ class NoticiaController extends Controller
             'titulo' => 'required',
             'conteudo' => 'required',
             'imagem' => 'required|image|mimes:jpeg,png,jpg,svg|max:2048',
-            'data' => [
-                'required',
-                'date_format:Y-m-d',
-                function ($attribute, $value, $fail) {
-                    $date = strtotime($value);
-                    $minDate = strtotime('2000-01-01');
-                    $maxDate = strtotime('2030-12-31');
-
-                    if ($date < $minDate || $date > $maxDate) {
-                        $fail('A data deve estar entre os anos 2000 e 2030.');
-                    }
-                },
-            ],
         ]);
         
         $existingNews = DB::table('noticia')
@@ -169,7 +157,8 @@ class NoticiaController extends Controller
                 'nm_titulo' => $validatedData['titulo'],
                 'ds_conteudo' => $validatedData['conteudo'],
                 'im_capa' => $imagemPath,
-                'dt_noticia' => $validatedData['data'],           
+                'dt_noticia' => now(),
+                'updated_at' => now()          
             ]);            
         }
        

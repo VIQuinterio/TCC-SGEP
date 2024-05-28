@@ -45,11 +45,20 @@ class ModalidadeController extends Controller
     
     public function listarModalidadeUsuario($id)
     {
-        $sort = request()->input('sort', 'id_usuario');
-        $direction = request()->input('direction', 'asc');
+        $sortMapping = [
+            'nome' => 'nm_modalidade',
+            'descricao' => 'ds_modalidade'
+        ];
+    
+        $sortKey = request()->input('sort', 'id_usuario');
+    
+        $sortAttribute = $sortMapping[$sortKey] ?? $sortKey;
+    
+        $direction = request()->input('direction', 'desc');
 
         return Modalidade::where('id_usuario', $id)
-            ->orderBy($sort, $direction)
+            ->orderBy($sortAttribute, $direction)
+            ->orderByRaw('GREATEST(created_at, updated_at) ' . $direction)
             ->paginate(10);
     }
 
@@ -103,7 +112,8 @@ class ModalidadeController extends Controller
         DB::table('modalidade')->insert([
             'nm_modalidade' => $validatedData['nome'],
             'ds_modalidade' => $validatedData['descricao'],
-            'id_usuario' => $idUsuario
+            'id_usuario' => $idUsuario,
+            'created_at' => now()
         ]);
 
         return redirect()->back()->with('success', 'Modalidade cadastrada com sucesso.');
@@ -114,8 +124,8 @@ class ModalidadeController extends Controller
         $idUsuario = Auth::id();
 
         $validatedData = $request->validate([
-            'nome' => 'required',
-            'descricao' => 'required',
+            'nome' => 'required|string',
+            'descricao' => 'required|string',
         ]);
 
         $existingMod = DB::table('modalidade')
@@ -133,7 +143,8 @@ class ModalidadeController extends Controller
             ->where('id_usuario', $idUsuario)
             ->update([
                 'nm_modalidade' => $validatedData['nome'],
-                'ds_modalidade' => $validatedData['descricao']
+                'ds_modalidade' => $validatedData['descricao'],
+                'updated_at' => now()
             ]);
  
         if ($updated) {
