@@ -139,33 +139,32 @@
             </div>
         </div>
 
-
         <div class="bg-1 p-25">
             <div id="eventos" class="flex-1 ml-64 p-2 area">
                 <h1 class="flex items-center text-5xl font-extrabold dark:text-white m-10">Eventos da região</h1>
             </div>
             <div id="eventos" class="flex-1 ml-64 p-6 area">
                 @foreach ($list_event as $event)
-                    <div
-                        class="card-event relative flex w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md">
+                    <div class="card-event relative flex w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md">
                         <div class="p-6">
-                            <h5
-                                class="mb-2 block font-sans text-xl font-semibold leading-snug tracking-normal text-blue-gray-900 antialiased">
+                            <h5 class="mb-2 block font-sans text-2xl font-semibold leading-snug tracking-normal text-blue-gray-900 antialiased">
                                 {{ $event->nm_evento }}
                             </h5>
-                            <h6
-                                class="mb-2 block font-sans text-xl font-semibold leading-snug tracking-normal text-blue-gray-900 antialiased">
-                                {{ \Carbon\Carbon::parse($event->dt_evento_inicio)->translatedFormat('j \\d\\e F \\d\\e Y') }}
-                               
+                            <h6 class="mb-2 block font-sans text-xl font-semibold leading-snug tracking-normal text-blue-gray-900 antialiased flex center">
+                                <svg class="mr-1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                    <path fill="#fff" d="M7 11h2v2H7zm14-6v14c0 1.11-.89 2-2 2H5a2 2 0 0 1-2-2V5c0-1.1.9-2 2-2h1V1h2v2h8V1h2v2h1a2 2 0 0 1 2 2M5 7h14V5H5zm14 12V9H5v10zm-4-6v-2h2v2zm-4 0v-2h2v2zm-4 2h2v2H7zm8 2v-2h2v2zm-4 0v-2h2v2z" />
+                                </svg>
+                                {{ \Carbon\Carbon::parse($event->dt_evento_inicio)->translatedFormat('j \\d\\e F \\d\\e Y') }}                                                            
                             </h6>
-                            <h6
-                             class="mb-2 block font-sans text-xl font-semibold leading-snug tracking-normal text-blue-gray-900 antialiased">
-                                {{ \Carbon\Carbon::parse($event->dt_evento_fim)->translatedFormat('j \\d\\e F \\d\\e Y') }}
-                           
+                            <h6 class="mb-2 block font-sans text-xl font-semibold leading-snug tracking-normal text-blue-gray-900 antialiased flex center">
+                                <svg class="mr-1" xmlns="http://www.w3.org/2000/svg" width="24" height="24"viewBox="0 0 24 24">
+                                    <path fill="#fff" d="M7 11h2v2H7zm14-6v14c0 1.11-.89 2-2 2H5a2 2 0 0 1-2-2V5c0-1.1.9-2 2-2h1V1h2v2h8V1h2v2h1a2 2 0 0 1 2 2M5 7h14V5H5zm14 12V9H5v10zm-4-6v-2h2v2zm-4 0v-2h2v2zm-4 2h2v2H7zm8 2v-2h2v2zm-4 0v-2h2v2z" />
+                                </svg>
+                                {{ \Carbon\Carbon::parse($event->dt_evento_fim)->translatedFormat('j \\d\\e F \\d\\e Y') }}                                                            
                             </h6> 
                             <h6
                                 class="mb-2 block font-sans text-xl font-semibold leading-snug tracking-normal text-blue-gray-900 antialiased">
-                                {{ $event->nm_unidade }}
+                                Local: {{ $event->nm_unidade }}
                             </h6>
                         </div>
                     </div>
@@ -181,10 +180,15 @@
                     <div class="relative flex w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md"
                         style="margin: 5px; flex-basis: calc(17% - 10px);">
                         <div class="p-6">
-                            <h5
-                                class="text-center mb-2 block font-sans text-xl font-semibold leading-snug tracking-normal text-blue-gray-900 antialiased">
-                                {{ $mod->nm_modalidade }}
-                            </h5>
+                            <form action="{{ route('app.modalidade.detalhes', ['id' => $mod->id_modalidade]) }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="mod_id" value="{{ $mod->id_modalidade }}">
+                                <button type="submit" class="custom-button">
+                                    <h5 class="text-center mb-2 block font-sans text-xl font-semibold leading-snug tracking-normal text-blue-gray-900 antialiased">
+                                        {{ $mod->nm_modalidade }}
+                                    </h5>
+                                </button>
+                            </form>
                         </div>
                     </div>
                 @endforeach
@@ -198,17 +202,21 @@
             <div id="unidades" class="flex-1 ml-64 p-6 unidade">
                 <div class="flex flex-wrap card-unidade">
                     @foreach ($list_unid as $unid)
-                        <div class="relative flex w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md"
-                            style="margin: 5px">
+                        <div class="relative flex w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md" style="margin: 5px">
                             <div class="p-6">
-                                <h5
-                                    class="mb-2 block font-sans text-xl font-semibold leading-snug tracking-normal text-blue-gray-900 antialiased">
-                                    {{ $unid->nm_unidade }}
-                                </h5>
-                                <h6
-                                    class="mb-2 block font-sans  font-semibold leading-snug tracking-normal text-blue-gray-900 antialiased">
-                                    {{ $unid->ds_endereco }}
-                                </h6>
+                                <form action="{{ route('app.unidade.detalhes', ['id' => $unid->id_unidade]) }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="unid_id" value="{{ $unid->id_unidade }}">
+                                    <button type="submit" class="custom-button">
+                                        <h5 class="mb-2 block font-sans text-xl font-semibold leading-snug tracking-normal text-blue-gray-900 antialiased">
+                                            {{ $unid->nm_unidade }}
+                                        </h5>
+                                        <h6 class="mb-2 block font-sans font-semibold leading-snug tracking-normal text-blue-gray-900 antialiased">
+                                            {{ $unid->ds_endereco }}
+                                        </h6>
+                                    </button>
+                                </form>
+                                
                                 <div class="hidden" data-endereco="{{ $unid->ds_endereco }}"
                                     data-municipio="{{ $user_data->nm_usuario }}"></div>
                             </div>

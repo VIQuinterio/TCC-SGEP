@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Modalidade;
+use App\Models\Unidade;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Traits\AuthTrait;
-use App\Models\Unidade;
 
 class ModalidadeController extends Controller
 {
@@ -36,6 +36,11 @@ class ModalidadeController extends Controller
         } else {
             return redirect()->route('login')->with('error', 'Você precisa fazer login como usuário para acessar o painel.');
         }
+    }
+
+    protected function listarUnidadeUsuario($idUsuario)
+    {
+        return Unidade::where('id_usuario', $idUsuario)->get();
     }
 
     public function listarModalidades($id){
@@ -178,5 +183,33 @@ class ModalidadeController extends Controller
         $id = $request->input('mod_id');
         $mod = Modalidade::findOrFail($id);
         return view('app.modalidade.editar', compact('mod'));
+    }
+
+    public function mostraModalidadeUnidade($id)
+    {
+        if (Auth::check() && Auth::user()->sg_tipo == 'USER') {
+            $idUsuario = Auth::id();
+            
+            $user_mod = User::findOrFail($idUsuario)->id;
+            if ($user_mod) {                
+                $user_data = $this->procurar_user_por_id($user_mod);
+                $mod_data = $this->procurar_mod_por_id($id);    
+                $list_mod = $this->listarModalidadeUsuario($user_mod);
+
+                // Busca as unidades que oferecem a modalidade selecionada e agrupa por unidade
+                $modalidades = DB::table('unidade_modalidade')
+                    ->where('unidade_modalidade.id_modalidade', $id)
+                    ->join('unidade', 'unidade_modalidade.id_unidade', '=', 'unidade.id_unidade')
+                    ->select('unidade.id_unidade', 'unidade.nm_unidade', 'unidade_modalidade.ds_horario', 'unidade_modalidade.ds_dia_semana')
+                    ->get();
+
+                $unidades = [];
+                foreach ($modalidades as $modalidade) {
+                    $unidades[$modalidade->nm_unidade][] = $modalidade;
+                }
+
+                return view('app.modalidade.show', compact('user_data', 'mod_data', 'list_mod', 'unidades'));  
+            }
+        }        
     }
 }

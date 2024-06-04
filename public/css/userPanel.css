@@ -109,8 +109,8 @@
 }
 
 .card-event{
-  background: linear-gradient(119deg, var(--primary-100) 26%, var(--primary-200) 66%);
-  color: var(--primary-300);
+  background: var(--primary-100);
+  color: var(--bg-100);
   margin: 5px; 
   flex-basis: calc(17% - 10px);
 }
@@ -188,3 +188,43 @@ legend{
   margin: 5px;
   width: 47%;
 }
+
+.custom-button {
+  width: 100%;
+  text-align: left;
+  padding: 8px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.custom-button:hover {
+  color: #3b82f6; /* Cor azul */
+}
+
+.text-bold {
+  font-weight: bold;
+  color: #000000; /* Preto ou qualquer cor desejada */
+}
+
+.text-gray-400 {
+  color: #d1d5db; /* Cinza claro */
+}
+
+.unidade-item {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.unidade-item h5 {
+  margin: 0;
+  color: #333;
+}
+
+.unidade-item p {
+  margin: 5px 0;
+  color: #666;
+}
+

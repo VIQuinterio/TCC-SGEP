@@ -64,6 +64,7 @@ Route::group(['prefix' => 'app', 'as' => 'app.'], function () {
         Route::post('excluir/{id}', [ModalidadeController::class, 'excluir'])->name('excluir');
     
         Route::get('buscar', [ModalidadeController::class, 'buscar'])->name('buscar');
+        Route::post('detalhes/{id}', [ModalidadeController::class, 'mostraModalidadeUnidade'])->name('detalhes');
     });
 
     Route::group(['prefix' => 'noticia', 'as' => 'noticia.'], function () {
