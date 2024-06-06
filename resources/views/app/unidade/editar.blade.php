@@ -42,28 +42,28 @@
                     <div>
                         <p>Selecione as modalidades e insira o horário de aula para cada uma:</p>
                         @foreach ($list_modalidades as $mod)
-                        <div class="mb-4">
-                            <input id="edit_modalidade_{{ $mod->id_modalidade }}" type="checkbox" name="modalidades[]" value="{{ $mod->id_modalidade }}" 
-                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 
-                                dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 edit-checkbox-trigger">
-                            <label for="edit_modalidade_{{ $mod->id_modalidade }}" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ $mod->nm_modalidade }}</label>
-                        
-                            <div class="ml-6 mt-2 horario-dia-container" id="edit_horarios_{{ $mod->id_modalidade }}">
-                                @foreach(['Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'] as $dia)
-                                    <div class="flex items-center mb-2">
-                                        <input type="checkbox" id="edit_dia_semana_{{ $mod->id_modalidade }}_{{ $dia }}" name="edit_dia_semana_{{ $mod->id_modalidade }}[]" value="{{ $dia }}"
-                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 
-                                        dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 edit-dia-trigger" data-target="edit_horario_{{ $mod->id_modalidade }}_{{ $dia }}">
-                                        <label for="edit_dia_semana_{{ $mod->id_modalidade }}_{{ $dia }}" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ $dia }}</label>
-                                        <input type="text" id="edit_horario_{{ $mod->id_modalidade }}_{{ $dia }}" name="edit_horario_{{ $mod->id_modalidade }}_{{ $dia }}" placeholder="Horário de aula" 
-                                        class="w-32 ml-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
-                                        focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-600 dark:border-gray-500 
-                                        dark:placeholder-gray-400 dark:text-white ">
-                                    </div>
-                                @endforeach
+                            <div class="mb-4">
+                                <input id="edit_modalidade_{{ $unid->id_unidade }}_{{ $mod->id_modalidade }}" type="checkbox" name="modalidades[]" value="{{ $mod->id_modalidade }}" 
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 
+                                    dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 edit-checkbox-trigger">
+                                <label for="edit_modalidade_{{ $unid->id_unidade }}_{{ $mod->id_modalidade }}" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ $mod->nm_modalidade }}</label>
+                            
+                                <div class="ml-6 mt-2 horario-dia-container hidden" id="edit_horarios_{{ $unid->id_unidade }}_{{ $mod->id_modalidade }}">
+                                    @foreach(['Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'] as $dia)
+                                        <div class="flex items-center mb-2">
+                                            <input type="checkbox" id="edit_dia_semana_{{ $unid->id_unidade }}_{{ $mod->id_modalidade }}_{{ $dia }}" name="edit_dia_semana_{{ $mod->id_modalidade }}[]" value="{{ $dia }}"
+                                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 
+                                            dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 edit-dia-trigger" data-target="edit_horario_{{ $unid->id_unidade }}_{{ $mod->id_modalidade }}_{{ $dia }}">
+                                            <label for="edit_dia_semana_{{ $unid->id_unidade }}_{{ $mod->id_modalidade }}_{{ $dia }}" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ $dia }}</label>
+                                            <input type="text" id="edit_horario_{{ $unid->id_unidade }}_{{ $mod->id_modalidade }}_{{ $dia }}" name="edit_horario_{{ $mod->id_modalidade }}_{{ $dia }}" placeholder="Horário de aula" 
+                                            class="w-32 ml-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
+                                            focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-600 dark:border-gray-500 
+                                            dark:placeholder-gray-400 dark:text-white hidden">
+                                        </div>
+                                    @endforeach
+                                </div>
                             </div>
-                        </div>
-                    @endforeach
+                        @endforeach
                     </div>
                     <!-- Rodapé do Modal -->
                     <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
@@ -86,5 +86,40 @@
         if (event.target === modal{{$unid->id_unidade}}) {
             event.stopPropagation(); // Impede a propagação do evento de fechamento do modal
         }
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        // Seleciona todos os checkboxes de modalidades
+        var modalidadeCheckboxes = document.querySelectorAll('.edit-checkbox-trigger');
+
+        modalidadeCheckboxes.forEach(function(checkbox) {
+            var unidadeId = checkbox.id.split('_')[2]; // Obtém o ID da unidade a partir do ID do checkbox
+            var modalidadeId = checkbox.value; // ID da modalidade
+            var diasHorariosDiv = document.getElementById('edit_horarios_' + unidadeId + '_' + modalidadeId);
+            
+            checkbox.addEventListener('change', function() {
+                if (checkbox.checked) {
+                    diasHorariosDiv.classList.remove('hidden');
+                } else {
+                    diasHorariosDiv.classList.add('hidden');
+                }
+            });
+        });
+
+        // Seleciona todos os checkboxes de dias
+        var diaCheckboxes = document.querySelectorAll('.edit-dia-trigger');
+
+        diaCheckboxes.forEach(function(diaCheckbox) {
+            var targetId = diaCheckbox.dataset.target; // Obtém o ID do input de horário alvo
+            var horarioInput = document.getElementById(targetId);
+            
+            diaCheckbox.addEventListener('change', function() {
+                if (diaCheckbox.checked) {
+                    horarioInput.classList.remove('hidden');
+                } else {
+                    horarioInput.classList.add('hidden');
+                }
+            });
+        });
     });
 </script>

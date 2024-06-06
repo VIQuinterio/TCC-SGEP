@@ -200,7 +200,7 @@ class ModalidadeController extends Controller
                 $modalidades = DB::table('unidade_modalidade')
                     ->where('unidade_modalidade.id_modalidade', $id)
                     ->join('unidade', 'unidade_modalidade.id_unidade', '=', 'unidade.id_unidade')
-                    ->select('unidade.id_unidade', 'unidade.nm_unidade', 'unidade_modalidade.ds_horario', 'unidade_modalidade.ds_dia_semana')
+                    ->select('unidade.id_unidade', 'unidade.nm_unidade', 'unidade.ds_endereco', 'unidade.ds_contato', 'unidade_modalidade.ds_horario', 'unidade_modalidade.ds_dia_semana')
                     ->get();
 
                 $unidades = [];

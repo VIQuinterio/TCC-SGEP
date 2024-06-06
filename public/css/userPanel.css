@@ -228,3 +228,11 @@ legend{
   color: #666;
 }
 
+.divisao{
+  border: 5px var(--primary-200) solid; 
+  border-radius: 5px;
+}
+/*
+.hidden {
+  display: none;
+}*/
