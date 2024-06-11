@@ -31,7 +31,7 @@ class NoticiaController extends Controller
                 
                 return view('app.noticia.noticias', compact('user_data', 'news_data', 'list_news'));
             } else {                
-                return redirect()->route('login')->with('error', 'Você não tem uma noticia associada.');
+                return redirect()->route('login')->with('error', 'Você não tem uma notícia associada.');
             }
         } else {            
             return redirect()->route('login')->with('error', 'Você precisa fazer login como usuário para acessar o painel.');
@@ -68,8 +68,7 @@ class NoticiaController extends Controller
             ->orderByRaw('GREATEST(created_at, updated_at) ' . $direction)
             ->paginate(10);
     }
-    
-    
+     
     public function buscarNoticia($key, $id)
     {
         $mod = DB::table('noticia')
@@ -105,7 +104,9 @@ class NoticiaController extends Controller
 
         $validatedData = $request->validate([
             'titulo' => 'required',
+            'autor' => 'required',
             'conteudo' => 'required',
+            'legenda' => 'required',
             'imagem' => 'required|image|mimes:jpeg,png,jpg,svg|max:10240',//10MB
         ]);
 
@@ -115,14 +116,16 @@ class NoticiaController extends Controller
 
             DB::table('noticia')->insert([
                 'nm_titulo' => $validatedData['titulo'],
+                'nm_autor' => $validatedData['autor'],
                 'ds_conteudo' => $validatedData['conteudo'],
+                'ds_legenda' => $validatedData['legenda'],
                 'im_capa' => $imagemPath, 
                 'dt_noticia' => now(),
                 'created_at' => now(),
                 'id_usuario' => $idUsuario
             ]);
 
-            return redirect()->back()->with('success', 'noticia cadastrada com sucesso.');
+            return redirect()->back()->with('success', 'Notícia cadastrada com sucesso.');
         }
     }
 
@@ -132,7 +135,9 @@ class NoticiaController extends Controller
 
         $validatedData = $request->validate([
             'titulo' => 'required',
+            'autor' => 'required',
             'conteudo' => 'required',
+            'legenda' => 'required',
             'imagem' => 'required|image|mimes:jpeg,png,jpg,svg|max:2048',
         ]);
         
@@ -143,7 +148,7 @@ class NoticiaController extends Controller
             ->first();
 
         if ($existingNews) {
-            return ['errorMessage' => 'Este título já está sendo usado em outro notícia. Por favor, escolha um título diferente.'];
+            return redirect()->back()->with('error', 'Este título já está sendo usado em outro notícia. Por favor, escolha um título diferente.');
         }
         
         if ($request->hasFile('imagem')) {
@@ -155,7 +160,9 @@ class NoticiaController extends Controller
             ->where('id_usuario', $idUsuario)
             ->update([
                 'nm_titulo' => $validatedData['titulo'],
+                'nm_autor' => $validatedData['autor'],
                 'ds_conteudo' => $validatedData['conteudo'],
+                'ds_legenda' => $validatedData['legenda'],
                 'im_capa' => $imagemPath,
                 'dt_noticia' => now(),
                 'updated_at' => now()          
@@ -163,10 +170,9 @@ class NoticiaController extends Controller
         }
        
         if ($updated) {
-            return redirect()->route("app.noticia.index");
-            /*return ['successMessage' => 'Informações do noticia atualizadas com sucesso'];*/
+            return redirect()->route("app.noticia.index")->with('success', 'Informações do notícias atualizadas com sucesso');
         } else {
-            return ['errorMessage' => 'noticia não encontrado'];
+            return redirect()->back()->with('error', 'Notícia não encontrada');
         }
     }
  
@@ -175,9 +181,9 @@ class NoticiaController extends Controller
         $deleted = DB::table('noticia')->where('id_noticia', $id)->delete();
 
         if ($deleted) {
-            return ['successMessage' => 'noticia excluída com sucesso'];
+            return redirect()->route("app.noticia.index")>with('success', 'Notícia excluída com sucesso');
         } else {
-            return ['errorMessage' => 'noticia não Encontrada'];
+            return redirect()->back()->with('error', 'Notícia não encontrada');
         }
     }
 

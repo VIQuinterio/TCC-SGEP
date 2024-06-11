@@ -9,7 +9,6 @@ use App\Http\Controllers\EventoController;
 use App\Http\Controllers\UnidadeController;
 use App\Http\Controllers\NoticiaController;
 
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes

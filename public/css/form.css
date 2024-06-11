@@ -48,7 +48,7 @@ form {
     overflow: hidden;
     padding: 10%;
     position: relative;
-    width: 80%;
+    width: 100%;
 }
 
 @media (min-width: 768px) {

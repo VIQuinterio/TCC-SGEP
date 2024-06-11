@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\UserRegistered;
 
 class DashboardController extends Controller
 {
@@ -95,16 +97,16 @@ class DashboardController extends Controller
     }
 
     public function cadastro(Request $request)
-    {       
+    {
         $validatedData = $request->validate([
             'nome' => 'required',
-            'email' => 'required|email|unique:usuario,ds_email',
+            'email' => 'required|email',
             'senha' => 'required',
             'idUsuario' => 'required',
         ]);
-
+    
         $hash_pass = Hash::make($validatedData['senha']);
-
+    
         DB::table('usuario')->insert([
             'ds_email' => $validatedData['email'],
             'nm_usuario' => $validatedData['nome'],
@@ -112,7 +114,28 @@ class DashboardController extends Controller
             'cd_usuario' => $validatedData['idUsuario']
         ]);
 
-        return redirect()->route("admin.dashboard");
+        // Filtre os dados que deseja enviar no e-mail
+        $userData = [
+            'nome' => $validatedData['nome'],
+            'email' => $validatedData['email'],
+            'senha' => $validatedData['senha'],
+            // Adicione mais campos conforme necessário
+        ];
+    
+        // Envie o e-mail de boas-vindas
+        Mail::to($validatedData['email'])->send(new UserRegistered($userData, $validatedData['email']));
+    
+        return redirect()->route("admin.dashboard")->with('success', 'Usuário cadastrado e email enviado com sucesso');
+    }
+
+    public function redefinirSenha(Request $request)
+    {
+        $validatedData = $request->validate([
+            'nome' => 'required',
+            'email' => 'required|email',
+            'senha' => 'required',
+            'idUsuario' => 'required',
+        ]);
     }
 
     public function atualizar(Request $request, $id)
@@ -136,7 +159,7 @@ class DashboardController extends Controller
             ]);
 
         if ($updated) {
-            return redirect()->route("admin.dashboard");
+            return redirect()->route("admin.dashboard")->with('success', 'Informações do usuário atualizadas com sucesso');
         } else {
             return redirect()->route('admin.dashboard')->with('error', 'Usuário não encontrado');
         }
@@ -147,7 +170,7 @@ class DashboardController extends Controller
         $deleted = DB::table('usuario')->where('id', $user_id)->delete();
 
         if ($deleted) {
-            return redirect()->route("admin.dashboard");
+            return redirect()->route("admin.dashboard")->with('success', 'Usuário excluído com sucesso');
         } else {
             return redirect()->route('admin.dashboard')->with('error', 'Usuário não encontrado');
         }

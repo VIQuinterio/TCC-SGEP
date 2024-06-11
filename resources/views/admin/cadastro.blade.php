@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
     <title>Cadastro</title>
 </head>
-<body bgcolor="#F9F6ED">
+<body>
     <span class="absolute text-white text-4xl top-5 left-4 cursor-pointer" onclick="openSidebar()">
         <i class="bi bi-filter-left px-2 bg-gray-900 rounded-md"></i>
     </span>

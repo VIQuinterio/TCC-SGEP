@@ -17,9 +17,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <!-- Leaflet -->
+    <!-- Leaflet 
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>-->
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA47WQlqotqlPlvoVmeO7xCoIW4NKiC7jw"></script>
 
     <link rel="stylesheet" href="{{ asset('css/fonts.css') }}">
     <link rel="stylesheet" href="{{ asset('css/userPanel.css') }}">

@@ -144,7 +144,7 @@ class EventoController extends Controller
             'created_at' => now()
         ]);
 
-        return redirect()->back()->with('success', 'evento cadastrada com sucesso.');
+        return redirect()->back()->with('success', 'Evento cadastrada com sucesso.');
     }
 
     public function atualizar(Request $request)
@@ -166,7 +166,7 @@ class EventoController extends Controller
             ->first();
 
         if ($existingEvent) {
-            return ['errorMessage' => 'Este nome do evento já está sendo usado em outro. Por favor, escolha um título diferente.'];
+            return redirect()->back()->with('error', 'Este nome do evento já está sendo usado em outro. Por favor, escolha um título diferente.');
         }
 
         $updated = DB::table('evento')
@@ -182,10 +182,9 @@ class EventoController extends Controller
             ]);
 
         if ($updated) {
-            return redirect()->route("app.evento.index");
-            /*return ['successMessage' => 'Informações do evento atualizadas com sucesso'];*/
+            return redirect()->route("app.evento.index")->with('success', 'Informações do evento atualizadas com sucesso');
         } else {
-            return ['errorMessage' => 'Evento não encontrado'];
+            return redirect()->back()->with('error', 'Evento não encontrado');
         }
     }
 
@@ -195,9 +194,9 @@ class EventoController extends Controller
         $deleted = DB::table('evento')->where('id_evento', $id)->delete();
 
         if ($deleted) {
-            return ['successMessage' => 'evento excluída com sucesso'];
+            return redirect()->back()->with('success', 'Evento excluída com sucesso');
         } else {
-            return ['errorMessage' => 'evento não Encontrada'];
+            return redirect()->back()->with('error', 'Evento não Encontrada');
         }
     }
 

@@ -18,6 +18,7 @@
 <body>
     @include('layouts.navbar')
     <div class="flex-1 ml-50 p-8 pt-32">
+        @include('layouts.alertMessage')
         <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
             <form action="{{ route('app.unidade.buscar') }}" method="GET" class="flex items-center">
                 <label for="buscar" class="sr-only">Buscar</label>
@@ -240,11 +241,7 @@
             @endif
         </div>
     </div>
-    @if (session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
+
     @if (isset($resultados_busca) && count($resultados_busca) > 0)
         @foreach ($resultados_busca as $unid)
             @include('app.unidade.editar')
@@ -276,6 +273,12 @@
                 <div>
                     <label for="contato" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Telefone</label>
                     <input type="tel" name="contato" id="contato"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                        required>
+                </div>
+                <div>
+                    <label for="secretaria" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Horário de funcionamento</label>
+                    <input type="text" name="secretaria" id="secretaria"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                         required>
                 </div>

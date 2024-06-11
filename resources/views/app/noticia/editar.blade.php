@@ -40,7 +40,7 @@
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                             required disabled>
                         </div>
-                        <div class="col-span-2">                                        
+                        <div class="col-span-2 sm:col-span-1">                                        
                             <label for="imagem"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Capa</label>
                             <input type="file" name="imagem" id="imagem" value="{{$news->im_capa}}"

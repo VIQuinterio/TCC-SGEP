@@ -111,6 +111,7 @@ class UnidadeController extends Controller
             'nome' => 'required',
             'endereco' => 'required',
             'contato' => 'required',
+            'secretaria' => 'required',
             'modalidades' => 'required|array',
         ]);
 
@@ -121,7 +122,7 @@ class UnidadeController extends Controller
             ->count();
 
         if ($checkName > 0) {
-            return redirect()->back()->with('errorMessage', 'Este nome já está registrado. Tente outro.');
+            return redirect()->back()->with('error', 'Este nome já está registrado. Tente outro.');
         }
 
         // Verificar se o endereço já está registrado
@@ -131,7 +132,7 @@ class UnidadeController extends Controller
             ->count();
 
         if ($checkEndereco > 0) {
-            return redirect()->back()->with('errorMessage', 'Este endereço já está registrado. Tente outro.');
+            return redirect()->back()->with('error', 'Este endereço já está registrado. Tente outro.');
         }
 
         // Verificar se o contato já está registrado
@@ -141,7 +142,7 @@ class UnidadeController extends Controller
             ->count();
 
         if ($checkContato > 0) {
-            return redirect()->back()->with('errorMessage', 'Este contato já está registrado. Tente outro.');
+            return redirect()->back()->with('error', 'Este contato já está registrado. Tente outro.');
         }
 
         // Cria a unidade esportiva
@@ -153,20 +154,12 @@ class UnidadeController extends Controller
             'nm_unidade' => $validatedData['nome'],
             'ds_endereco' => $validatedData['endereco'],
             'ds_contato' => $validatedData['contato'],
+            'ds_secretaria' => $validatedData['secretaria'],
             'id_usuario' => $idUsuario,
             'created_at' => now()
         ]);
 
         // Associa as modalidades à unidade esportiva
-        /*foreach ($validatedData['modalidades'] as $modalidade) {
-            DB::table('unidade_modalidade')->insert([
-                'id_unidade' => $unidade,
-                'id_modalidade' => $modalidade,
-                'ds_horario' => $request->input('horario_'.$modalidade),
-                'ds_dia_semana' => $request->input('dia_semana_'.$modalidade),
-            ]);
-        }*/
-
         foreach ($validatedData['modalidades'] as $modalidadeId) {
             $dias_semana = $request->input('dia_semana_' . $modalidadeId, []);
             foreach ($dias_semana as $dia) {
@@ -180,7 +173,7 @@ class UnidadeController extends Controller
             }
         }
 
-        return redirect()->back()->with('success', 'unidade cadastrada com sucesso.');
+        return redirect()->back()->with('success', 'Unidade cadastrada com sucesso.');
     }
 
     public function atualizar(Request $request)
@@ -189,6 +182,7 @@ class UnidadeController extends Controller
             'nome' => 'required|string',
             'endereco' => 'required|string',
             'contato' => 'required|string',
+            'secretaria' => 'required',
             'modalidades' => 'required|array',
         ]);
     
@@ -209,7 +203,7 @@ class UnidadeController extends Controller
                 $camposAlterados = true;
             }
         } else {
-            return ['errorMessage' => 'Unidade não encontrada'];
+            return redirect()->back()->with('error', 'Unidade não encontrada');
         }
 
         // Atualiza a unidade apenas se os campos nome, endereço ou contato foram alterados
@@ -221,11 +215,12 @@ class UnidadeController extends Controller
                     'nm_unidade' => $validatedData['nome'],
                     'ds_endereco' => $validatedData['endereco'],
                     'ds_contato' => $validatedData['contato'],
+                    'ds_secretaria' => $validatedData['secretaria'],
                     'updated_at' => now()
                 ]);
 
             if (!$updated) {
-                return ['errorMessage' => 'Erro ao atualizar informações da unidade'];
+                return redirect()->back()->with('error', 'Erro ao atualizar informações da unidade');
             }
         }
 
@@ -262,7 +257,7 @@ class UnidadeController extends Controller
                 }
             }
         }
-        return redirect()->route("app.unidade.index");
+        return redirect()->back()->with('success', 'Informações da unidade atualizadas com sucesso');
         
     }
     
@@ -272,10 +267,9 @@ class UnidadeController extends Controller
         $deleted = DB::table('unidade')->where('id_unidade', $id)->delete();
 
         if ($deletedAssociation &&  $deleted) {
-            return redirect()->route("app.unidade.index");
-            //return ['successMessage' => 'unidade excluída com sucesso'];
+            return redirect()->route("app.unidade.index")->with('success', 'Unidade excluída com sucesso');
         } else {
-            //return ['errorMessage' => 'unidade não Encontrada'];
+            return redirect()->back()->with('error', 'Unidade não Encontrada');
         }
     }
 

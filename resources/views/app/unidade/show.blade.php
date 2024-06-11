@@ -18,6 +18,8 @@
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA47WQlqotqlPlvoVmeO7xCoIW4NKiC7jw"></script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
@@ -36,6 +38,7 @@
                 <div class="mb-8 mt-3">
                     <h5 class="text-xl text-gray-700">Endereço: {{ $unid_data->ds_endereco }}</h5>
                     <h5 class="text-xl text-gray-700">Contato: {{ $unid_data->ds_contato }}</h5>
+                    <h5 class="text-xl text-gray-700">Secretária: {{ $unid_data->ds_secretaria }}</h5>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <!-- Detalhes das Modalidades -->
@@ -52,18 +55,16 @@
                             </div>
                         @endforeach
                     </div>
-        
+                    <div class="hidden" id="endereco" data-endereco="{{ $unid_data->ds_endereco }}" data-municipio="{{ $user_data->nm_usuario }}"></div>
                     <!-- Localização no Mapa -->
                     <div class="p-6">
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14581.661438729845!2d-46.3000647!3d-23.9811055!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce023de24d95ab%3A0xcd45b652cdd33981!2sComplexo%20Esportivo%20e%20Recreativo%20Rebou%C3%A7as!5e0!3m2!1spt-BR!2sbr!4v1715549784784!5m2!1spt-BR!2sbr" width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        <div id="map" class="rounded" style="width: 600px; height: 400px;"></div>
                     </div>
                 </div>
             </div>
-        </div>
-        
-        
+        </div>              
         @include('layouts.footer')
     </main>    
-    
+    <script src="{{ asset('js/mapUnid.js') }}"></script>
 </body>
 </html>

@@ -18,6 +18,7 @@
 <body>
     @include('layouts.navbar')
     <div class="flex-1 ml-50 p-8 pt-32">
+       @include('layouts.alertMessage')
         <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
             <form action="{{ route('app.modalidade.buscar') }}" method="GET" class="flex items-center">
                 <label for="buscar" class="sr-only">Buscar</label>
@@ -173,11 +174,7 @@
             @endif
         </div>
     </div>
-    @if (session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
+
     @if (isset($resultados_busca) && count($resultados_busca) > 0)
         @foreach ($resultados_busca as $mod)
         @include('app.modalidade.editar')

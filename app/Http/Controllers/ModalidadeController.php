@@ -111,7 +111,7 @@ class ModalidadeController extends Controller
             ->count();
 
         if ($check_name > 0) {
-            return ['errorMessage' => 'Este nome já está registrado. Tente outro.'];
+            return redirect()->back()->with('error', 'Este nome já está registrado. Por favor, escolha um nome diferente.');
         }
 
         DB::table('modalidade')->insert([
@@ -140,7 +140,7 @@ class ModalidadeController extends Controller
             ->first();
     
         if ($existingMod) {
-            return ['errorMessage' => 'Este título já está sendo usado em outro notícia. Por favor, escolha um título diferente.'];
+            return redirect()->back()->with('error', 'Este nome já está registrado. Por favor, escolha um nome diferente.');
         }
         
         $updated = DB::table('modalidade')
@@ -153,10 +153,9 @@ class ModalidadeController extends Controller
             ]);
  
         if ($updated) {
-            return redirect()->route("app.modalidade.index");
-            /*return ['successMessage' => 'Informações da Modalidade atualizadas com sucesso'];*/
+            return redirect()->back()->with('success', 'Informações da modalidade atualizadas com sucesso');
         } else {
-            return ['errorMessage' => 'Modalidade não encontrada'];
+            return redirect()->back()->with('error', 'Modalidade não encontrada');
         }
         
     }
@@ -166,9 +165,9 @@ class ModalidadeController extends Controller
         $deleted = DB::table('modalidade')->where('id_modalidade', $id)->delete();
 
         if ($deleted) {
-            return ['successMessage' => 'Modalidade excluída com sucesso'];
+            return redirect()->back()->with('success', 'Modalidade excluída com sucesso');
         } else {
-            return ['errorMessage' => 'Modalidade não Encontrada'];
+            return redirect()->back()->with('error', 'Modalidade não Encontrada');
         }
     }
 
