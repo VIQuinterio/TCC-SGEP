@@ -177,10 +177,10 @@
             <div id="modalidades" class="flex-1 ml-64 p-2 area">
                 <h1 class="flex items-center text-5xl font-extrabold dark:text-white m-10">Atividades Esportivas</h1>
             </div>
-            <div id="modalidades" class="flex-1 ml-64 p-6 area">
-                @foreach ($list_mod as $mod)
-                    <div class="relative flex w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md"
-                        style="margin: 5px; flex-basis: calc(17% - 10px);">
+            <div id="modalidades-content" class="flex-1 ml-64 p-6 area">
+                @foreach ($list_mod as $index => $mod)
+                    <div class="relative flex w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md modalidade-item {{ $index >= 8 ? 'hidden' : '' }}"
+                        style="margin: 5px; flex-basis: calc(17% - 10px);" data-index="{{ $index }}">
                         <div class="p-6">
                             <form action="{{ route('app.modalidade.detalhes', ['id' => $mod->id_modalidade]) }}" method="POST">
                                 @csrf
@@ -195,7 +195,22 @@
                     </div>
                 @endforeach
             </div>
+            @if (count($list_mod) > 8)
+                <div class="flex justify-center mt-4 ">
+                    <button onclick="showMore()" class="custom-button">
+                        <div class="flex flex-col items-center justify-center">
+                            <h5 class="text-center mb-2 block font-sans text-xl font-semibold leading-snug tracking-normal text-blue-gray-900 antialiased">
+                            Veja mais                            
+                            </h5>
+                            <svg class="w-6 h-6 text-gray-800 dark:text-white pb-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 8">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 5.326 5.7a.909.909 0 0 0 1.348 0L13 1"/>
+                            </svg>
+                        </div>                   
+                    </button>
+                </div>
+            @endif
         </div>
+        
 
         <div class="bg-1 p-25">
             <div id="unidades" class="flex-1 ml-64 p-2 unidade">
@@ -225,7 +240,7 @@
                         </div>
                     @endforeach
                 </div>
-                <div id="map" class="rounded" style="width: 600px; height: 400px;"></div>
+                <!-- <div id="map" class="rounded" style="width: 600px; height: 400px;"></div>-->
             </div>
         </div>
     </div>
@@ -234,6 +249,19 @@
     </div>
     <script src="{{ asset('js/map.js') }}"></script>
     <script src="{{ asset('js/newsbtn.js') }}"></script>
+    <script>
+        let currentIndex = 8;
+
+        function showMore() {
+            const items = document.querySelectorAll('.modalidade-item.hidden');
+            for (let i = 0; i < 8 && currentIndex < items.length + 8; i++) {
+                if (items[i]) {
+                    items[i].classList.remove('hidden');
+                }
+                currentIndex++;
+            }
+        }
+    </script>
 </body>
 
 </html>

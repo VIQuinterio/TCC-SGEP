@@ -8,6 +8,7 @@ use App\Http\Controllers\ModalidadeController;
 use App\Http\Controllers\EventoController;
 use App\Http\Controllers\UnidadeController;
 use App\Http\Controllers\NoticiaController;
+use App\Http\Controllers\UsuarioController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,6 +31,11 @@ Route::get('/login', function () {
 
 Route::post('auth', [AuthController::class, 'auth'])->name('auth')->middleware('check.user.type');
 
+Route::get('verificar-email/{id}', [UsuarioController::class, 'verificarEmail'])->name('verificar.email');
+
+Route::get('redefinir-senha', [UsuarioController::class, 'showRedefinirSenhaForm'])->name('redefinir_senha.user');
+Route::post('redefinir-senha', [UsuarioController::class, 'redefinirSenha'])->name('redefinir_senha.post');
+
 Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {    
     Route::get('dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
 
@@ -51,6 +57,8 @@ Route::group(['prefix' => 'app', 'as' => 'app.'], function () {
     Route::get('home', [AppController::class, 'home'])->name('home');
 
     Route::get('logout', [AppController::class, 'logout'])->name('logout');
+
+    Route::get('area-usuario', [AppController::class, 'area'])->name('area');
 
     Route::group(['prefix' => 'modalidade', 'as' => 'modalidade.'], function () {
         Route::get('/', [ModalidadeController::class, 'index'])->name('index'); 

@@ -317,7 +317,9 @@ CREATE TABLE `usuario` (
   `nm_usuario` varchar(50) NOT NULL,
   `ds_senha` varchar(255) NOT NULL,
   `cd_usuario` char(8) NOT NULL,
-  `sg_tipo` char(5) DEFAULT 'USER'
+  `sg_tipo` char(5) DEFAULT 'USER',
+  `ic_email_verificado` tinyint(1) DEFAULT NULL,
+  `ic_precisa_redefinir_senha` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --

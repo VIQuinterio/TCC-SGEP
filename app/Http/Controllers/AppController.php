@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Traits\AuthTrait;
+use Illuminate\Support\Facades\Hash;
 
 class AppController extends Controller
 {

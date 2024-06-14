@@ -63,6 +63,7 @@
                 <p class="email"><strong>Email:</strong> {{ $userData['email'] ?? 'E-mail não disponível' }}<hr/></p>
                 <p class="pass"><strong>Senha:</strong> {{ $userData['senha'] ?? 'Senha não disponível' }}</p>                
             </div>
+            <a href="{{ route('verificar.email', ['id' => $userData['cd_usuario']]) }}">Verificar Email</a>
             <p>Obrigado por escolher utilizar a plataforma SGEP.</p>
             <p>Se você tiver alguma dúvida, não hesite em nos contatar.</p>
         </div>
