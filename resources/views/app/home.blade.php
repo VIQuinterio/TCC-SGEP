@@ -40,19 +40,25 @@
                             @foreach ($list_news as $index => $news)
                                 <div class="{{ $index === 0 ? '' : 'hidden' }} duration-700 ease-in-out"
                                     data-carousel-item>
-                                    <img src="{{ asset('storage/' . $news->im_capa) }}"
-                                        class="absolute block w-full h-full object-cover -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
-                                        alt="...">
-                                    <div
-                                        class="absolute inset-0 flex flex-col items-start justify-end text-white z-10 pb-10 pl-5">
-                                        <h2 class="md:text-3xl text-3xl font-extrabold text-left uppercase"
-                                            style="text-shadow: rgb(0, 0, 0) 1px 0 10px;">{{ $news->nm_titulo }}</h2>
-                                        <div class="bg-blue-700 p-1.5">
-                                            <p class="text-white text-sm text-left">
-                                                {{ \Carbon\Carbon::parse($news->dt_noticia)->translatedFormat('j \d\e F \d\e Y') }}
-                                            </p>
-                                        </div>
-                                    </div>
+                                    <form action="{{ route('app.noticia.detalhes', ['id' => $noticia->id_noticia]) }}"
+                                        method="POST">
+                                        @csrf
+                                        <input type="hidden" name="news_id" value="{{ $noticia->id_noticia }}">
+                                        <button type="submit" class="">
+                                            <img src="{{ asset('storage/' . $news->im_capa) }}"
+                                            class="absolute block w-full h-full object-cover -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
+                                            alt="...">
+                                            <div class="absolute inset-0 flex flex-col items-start justify-end text-white z-10 pb-10 pl-5">
+                                                <h2 class="md:text-3xl text-3xl font-extrabold text-left uppercase"
+                                                style="text-shadow: rgb(0, 0, 0) 1px 0 10px;">{{ $news->nm_titulo }}</h2>
+                                                <div class="bg-blue-700 p-1.5">
+                                                    <p class="text-white text-sm text-left">
+                                                        {{ \Carbon\Carbon::parse($news->dt_noticia)->translatedFormat('j \d\e F \d\e Y') }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </button>
+                                    </form>
                                 </div>
                             @endforeach
                         </div>
@@ -240,7 +246,7 @@
                         </div>
                     @endforeach
                 </div>
-                <!-- <div id="map" class="rounded" style="width: 600px; height: 400px;"></div>-->
+                <div id="map" class="rounded" style="width: 600px; height: 400px;"></div>
             </div>
         </div>
     </div>
